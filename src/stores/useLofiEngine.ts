@@ -11,13 +11,13 @@ interface LofiEngineState {
   isInitialized: boolean;
   volume: number;
   isMuffled: boolean;
-  isBoringMode: boolean;
+  isRecruiterMode: boolean;
   frequencyData: Uint8Array | null;
 
   initAudio: () => Promise<void>;
   setVolume: (volume: number) => void;
   toggleMuffle: () => void;
-  toggleBoringMode: () => void;
+  toggleRecruiterMode: () => void;
   getFrequencyData: () => Uint8Array | null;
   cleanup: () => void;
 }
@@ -36,7 +36,7 @@ export const useLofiEngine = create<LofiEngineState>((set, get) => ({
   isInitialized: false,
   volume: 0.35,
   isMuffled: false,
-  isBoringMode: false,
+  isRecruiterMode: false,
   frequencyData: null,
 
   initAudio: async () => {
@@ -123,9 +123,9 @@ export const useLofiEngine = create<LofiEngineState>((set, get) => ({
     }
   },
 
-  toggleBoringMode: () => {
-    const { isBoringMode } = get();
-    set({ isBoringMode: !isBoringMode });
+  toggleRecruiterMode: () => {
+    const { isRecruiterMode } = get();
+    set({ isRecruiterMode: !isRecruiterMode });
   },
 
   getFrequencyData: () => {

@@ -130,8 +130,10 @@ export default function MusicSection() {
                       <div key={j} className="w-[1px] h-full" style={{ background: color, transform: `scaleY(${Math.random() * 0.8 + 0.2})` }} />
                     ))}
                   </div>
-                  <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center shrink-0 z-10">
-                    <Play size={12} className="text-slate-500 ml-0.5" />
+                  <div className="w-10 h-10 rounded bg-slate-900 border border-red-500/30 flex items-center justify-center shrink-0 z-10 relative overflow-hidden group-hover:border-red-500 transition-colors">
+                    {/* Placeholder cover art */}
+                    <div className="absolute inset-0 opacity-40 mix-blend-overlay" style={{ background: `linear-gradient(45deg, ${color}, transparent)` }} />
+                    <Play size={14} className="text-white ml-0.5 relative z-10 opacity-50 group-hover:opacity-100 transition-opacity" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-sm text-slate-200">{track.title}</div>
@@ -160,6 +162,38 @@ export default function MusicSection() {
                   {ach}
                 </div>
               ))}
+            </div>
+          </motion.div>
+
+          {/* Tour Dates */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.42 }}
+          >
+            <h3 className="text-[10px] font-mono uppercase tracking-widest mb-3 flex items-center gap-2" style={{ color }}>
+              <span className="w-4 h-px bg-current" /> Tour Dates / Live Setlog
+            </h3>
+            <div className="rounded-xl border p-4 bg-black/40 relative overflow-hidden" style={{ borderColor: '#1e293b' }}>
+              <div className="space-y-3 relative z-10">
+                 <div className="flex items-center gap-3 text-xs font-mono">
+                    <span className="w-16" style={{ color }}>Feb 26</span>
+                    <span className="text-slate-300 flex-1">VIBRANCE 2026 Mainstage</span>
+                    <span className="text-slate-500 text-right hidden sm:block">VIT Chennai</span>
+                 </div>
+                 <div className="w-full h-px bg-slate-800/50" />
+                 <div className="flex items-center gap-3 text-xs font-mono">
+                    <span className="w-16" style={{ color }}>Oct 25</span>
+                    <span className="text-slate-300 flex-1">VITC Rap Battle Finals</span>
+                    <span className="text-slate-500 text-right hidden sm:block">Amphitheatre</span>
+                 </div>
+                 <div className="w-full h-px bg-slate-800/50" />
+                 <div className="flex items-center gap-3 text-xs font-mono opacity-60">
+                    <span className="w-16" style={{ color }}>Sep 25</span>
+                    <span className="text-slate-300 flex-1">Music Club Orientation</span>
+                    <span className="text-slate-500 text-right hidden sm:block">AB1</span>
+                 </div>
+              </div>
             </div>
           </motion.div>
 

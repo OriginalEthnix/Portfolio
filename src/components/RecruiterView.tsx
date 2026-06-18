@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { profile, projects, experiences, leadership, certificates, skills } from '@/data/portfolio';
 import { useStudioStore } from '@/stores/useStudioStore';
 
-export default function BoringView() {
-  const { toggleBoringMode } = useStudioStore();
+export default function RecruiterView() {
+  const { toggleRecruiterMode } = useStudioStore();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -17,7 +17,7 @@ export default function BoringView() {
     >
       <div className="fixed top-6 right-6 md:top-10 md:right-10 z-50">
         <button
-          onClick={toggleBoringMode}
+          onClick={toggleRecruiterMode}
           className="px-4 py-2 bg-gray-900 text-white text-xs uppercase tracking-widest font-sans rounded shadow hover:bg-gray-700 transition-colors"
         >
           Return to Vibe Mode

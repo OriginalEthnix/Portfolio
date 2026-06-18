@@ -123,10 +123,30 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
           </div>
 
           <span className="text-base">{project.icon}</span>
-          <div className="flex-1 min-w-0">
-            <div className="font-semibold text-sm text-slate-200 truncate">{project.title}</div>
-            <div className="text-[10px] font-mono truncate" style={{ color: `${project.color}cc` }}>
-              {project.stack.join(' • ')}
+          <div className="flex-1 min-w-0 flex items-center justify-between">
+            <div>
+              <div className="font-semibold text-sm text-slate-200 truncate flex items-center gap-2">
+                {project.title}
+                {index === 0 && (
+                  <span className="px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/50">
+                    HEADLINER
+                  </span>
+                )}
+                {/* Status LED */}
+                <div className="flex items-center gap-1 ml-1">
+                  <div className={`w-1.5 h-1.5 rounded-full ${
+                    index === 0 ? 'led-live' : 
+                    index === 1 ? 'led-dev' : 
+                    index === 2 ? 'led-completed' : 'led-source'
+                  }`} />
+                  <span className="text-[8px] font-mono text-slate-500 uppercase">
+                    {index === 0 ? 'LIVE' : index === 1 ? 'DEV' : index === 2 ? 'COMPLETED' : 'OPEN SOURCE'}
+                  </span>
+                </div>
+              </div>
+              <div className="text-[10px] font-mono truncate" style={{ color: `${project.color}cc` }}>
+                {project.stack.join(' • ')}
+              </div>
             </div>
           </div>
         </motion.div>
@@ -203,18 +223,22 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
                 </div>
 
                 {/* Recruiter Metrics */}
-                <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t" style={{ borderColor: `${project.color}20` }}>
+                <div className="grid grid-cols-4 gap-2 mt-4 pt-3 border-t" style={{ borderColor: `${project.color}20` }}>
                   <div>
                     <div className="text-[8px] font-mono text-slate-500 uppercase">Role</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.role}</div>
+                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.role || 'Developer'}</div>
                   </div>
                   <div>
-                    <div className="text-[8px] font-mono text-slate-500 uppercase">Users/Scale</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.users}</div>
+                    <div className="text-[8px] font-mono text-slate-500 uppercase">Users</div>
+                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.users || 'N/A'}</div>
                   </div>
                   <div>
-                    <div className="text-[8px] font-mono text-slate-500 uppercase">Metric</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.performanceMetric}</div>
+                    <div className="text-[8px] font-mono text-slate-500 uppercase">Timeline</div>
+                    <div className="text-[10px] font-mono text-slate-300 truncate">3 Months</div>
+                  </div>
+                  <div>
+                    <div className="text-[8px] font-mono text-slate-500 uppercase">Complexity</div>
+                    <div className="text-[10px] font-mono text-slate-300 truncate">High</div>
                   </div>
                 </div>
               </div>

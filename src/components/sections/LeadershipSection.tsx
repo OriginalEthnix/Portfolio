@@ -7,6 +7,8 @@ import { leadership } from '@/data/portfolio';
 function MixerChannel({ role, index }: { role: typeof leadership[number]; index: number }) {
   const [fader, setFader] = useState(80);
   const [hovered, setHovered] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [solo, setSolo] = useState(false);
 
   return (
     <motion.div
@@ -25,12 +27,14 @@ function MixerChannel({ role, index }: { role: typeof leadership[number]; index:
     >
       {hovered && (
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute -top-20 left-1/2 -translate-x-1/2 w-40 p-2 rounded border z-50 text-center pointer-events-none"
-          style={{ background: 'rgba(5,7,13,0.95)', borderColor: `${role.color}40`, boxShadow: `0 4px 20px ${role.color}30` }}
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="absolute bottom-[105%] left-1/2 -translate-x-1/2 w-48 p-3 rounded-lg border z-50 text-center pointer-events-none"
+          style={{ background: 'rgba(5,7,13,0.98)', borderColor: `${role.color}40`, boxShadow: `0 8px 30px ${role.color}30` }}
         >
-           <span className="text-[9px] font-mono text-slate-300">{role.desc}</span>
+           <div className="text-[10px] font-bold text-white mb-1">{role.role}</div>
+           <div className="text-[8px] font-mono mb-2" style={{ color: role.color }}>{role.org}</div>
+           <div className="text-[9px] text-slate-300 leading-relaxed">{role.desc}</div>
         </motion.div>
       )}
       {/* Channel label */}
@@ -54,8 +58,8 @@ function MixerChannel({ role, index }: { role: typeof leadership[number]; index:
                 <motion.div
                   key={row}
                   className="w-2 h-1 rounded-sm"
-                  style={{ background: row < defaultLevel ? litColor : '#1e293b' }}
-                  animate={hovered ? {
+                  style={{ background: (row < defaultLevel && !muted) || solo ? litColor : '#1e293b' }}
+                  animate={hovered && !muted ? {
                     background: [
                       row < 4 ? litColor : '#1e293b',
                       row < 11 ? litColor : '#1e293b',
@@ -68,6 +72,20 @@ function MixerChannel({ role, index }: { role: typeof leadership[number]; index:
             })}
           </div>
         ))}
+      </div>
+
+      {/* Solo / Mute Buttons */}
+      <div className="flex gap-1.5 w-full justify-center my-1 z-10 relative">
+        <button
+          onClick={() => { setMuted(!muted); if (!muted) setSolo(false); }}
+          className="w-6 h-6 flex items-center justify-center rounded text-[9px] font-black shadow-sm transition-colors"
+          style={{ background: muted ? '#ef4444' : '#1e293b', color: muted ? 'white' : '#64748b' }}
+        >M</button>
+        <button
+          onClick={() => { setSolo(!solo); if (!solo) setMuted(false); }}
+          className="w-6 h-6 flex items-center justify-center rounded text-[9px] font-black shadow-sm transition-colors"
+          style={{ background: solo ? '#fbbf24' : '#1e293b', color: solo ? 'black' : '#64748b' }}
+        >S</button>
       </div>
 
       {/* Fader */}

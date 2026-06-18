@@ -10,13 +10,16 @@ import TopBar from "@/components/TopBar";
 import ContactBar from "@/components/ContactBar";
 import BrowserPanel from "@/components/BrowserPanel";
 import WorkspaceLayout from "@/components/WorkspaceLayout";
-import BoringView from "@/components/BoringView";
+import RecruiterView from "@/components/RecruiterView";
 import AudioControls from "@/components/AudioControls";
 import VibeAssistant from "@/components/VibeAssistant";
 import SessionPlayback from "@/components/SessionPlayback";
+import CommandPalette from "@/components/CommandPalette";
+import KeyboardShortcuts from "@/components/KeyboardShortcuts";
+import SoundEngine from "@/components/SoundEngine";
 
 export default function Home() {
-  const { isBoringMode, isStartupComplete, addTypedKey } = useStudioStore();
+  const { isRecruiterMode, isStartupComplete, addTypedKey } = useStudioStore();
   const initAudio = useLofiEngine((s) => s.initAudio);
   const isInitialized = useLofiEngine((s) => s.isInitialized);
   const cleanup = useLofiEngine((s) => s.cleanup);
@@ -58,8 +61,8 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {!isStartupComplete ? (
           <StartupScreen key="startup" />
-        ) : isBoringMode ? (
-          <BoringView key="boring" />
+        ) : isRecruiterMode ? (
+          <RecruiterView key="recruiter" />
         ) : (
           <div key="vibes" className="flex flex-col h-screen overflow-hidden">
             <TopBar />
@@ -72,6 +75,9 @@ export default function Home() {
               {/* V2 Integrations */}
               <VibeAssistant />
               <SessionPlayback />
+              <CommandPalette />
+              <KeyboardShortcuts />
+              <SoundEngine />
             </div>
 
             <AudioControls />

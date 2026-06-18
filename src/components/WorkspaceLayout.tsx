@@ -10,7 +10,8 @@ import LeadershipSection from './sections/LeadershipSection';
 import SkillsSection from './sections/SkillsSection';
 import HobbiesSection from './sections/HobbiesSection';
 import MusicSection from './sections/MusicSection';
-import ContactSection from './sections/ContactSection'; // Need to create this
+import ContactSection from './sections/ContactSection';
+import AchievementsSection from './sections/AchievementsSection';
 
 const sections = {
   hero: HeroSection,
@@ -21,6 +22,7 @@ const sections = {
   skills: SkillsSection,
   hobbies: HobbiesSection,
   music: MusicSection,
+  achievements: AchievementsSection,
   contact: ContactSection,
 };
 

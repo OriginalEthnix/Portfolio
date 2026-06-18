@@ -16,6 +16,7 @@ const BROWSER_ITEMS: { id: SectionId; label: string; icon: React.ElementType; co
   { id: 'skills', label: 'Skills', icon: Music2, color: '#34d399', sub: ['Frontend', 'Backend', 'Databases', 'AI / ML', 'Tools'] },
   { id: 'hobbies', label: 'Hobbies', icon: Heart, color: '#f472b6', sub: ['Rap', 'Music Production', 'Public Speaking', 'Event Hosting', 'Gym & Fitness', 'Content Creation'] },
   { id: 'music', label: 'Music', icon: Mic2, color: '#ef4444', sub: ['WADHWAVE', 'Discography', 'Performances', 'Rap Battles', 'Projects'] },
+  { id: 'achievements', label: 'Achievements', icon: Star, color: '#10b981', sub: ['Performances', 'Projects', 'Certifications', 'Leadership'] },
   { id: 'contact', label: 'Contact', icon: Mail, color: '#60a5fa', sub: ['Email', 'LinkedIn', 'GitHub', 'Instagram', 'Resume'] },
 ];
 

@@ -52,10 +52,18 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
           whileHover={{ borderColor: `${cert.color}50`, boxShadow: `0 0 12px ${cert.glow}` }}
           onClick={() => toggleExpandCertificate(cert.id)}
         >
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-slate-200 truncate">{cert.name}</div>
-            <div className="text-[10px] font-mono" style={{ color: `${cert.color}aa` }}>
-              {cert.issuer} &nbsp;•&nbsp; {cert.date}
+          <div className="flex-1 min-w-0 flex items-center justify-between">
+            <div>
+              <div className="text-sm font-semibold text-slate-200 truncate flex items-center gap-2">
+                {cert.name}
+                <span className="px-1.5 py-[1px] rounded text-[7px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                  <div className="w-1 h-1 rounded-full bg-emerald-400" />
+                  VERIFIED
+                </span>
+              </div>
+              <div className="text-[10px] font-mono" style={{ color: `${cert.color}aa` }}>
+                {cert.issuer} &nbsp;•&nbsp; {cert.date}
+              </div>
             </div>
           </div>
 
@@ -184,6 +192,18 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
 }
 
 export default function CertificatesSection() {
+  const groupedCerts = certificates.reduce((acc, cert) => {
+    const yearMatch = cert.date.match(/\d{4}/);
+    const year = yearMatch ? yearMatch[0] : 'Other';
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(cert);
+    return acc;
+  }, {} as Record<string, Certificate[]>);
+
+  const years = Object.keys(groupedCerts).sort((a, b) => b.localeCompare(a));
+
+  let globalIndex = 0;
+
   return (
     <div className="h-full flex flex-col">
       <div className="px-3 py-2 flex items-center gap-3 border-b shrink-0"
@@ -193,11 +213,26 @@ export default function CertificatesSection() {
         <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, #06b6d430, transparent)' }} />
         <span className="text-[9px] font-mono text-slate-600">{certificates.length} tracks</span>
       </div>
-      <div className="flex-1 overflow-y-auto">
-        {certificates.map((c, i) => (
-          <CertRow key={c.id} cert={c} index={i} />
+      <div className="flex-1 overflow-y-auto pb-4 relative pl-4">
+        {/* Vertical Timeline Line */}
+        <div className="absolute left-6 top-0 bottom-0 w-px bg-slate-800" />
+        
+        {years.map((year) => (
+          <div key={year} className="mb-4 relative">
+            <div className="sticky top-0 z-10 flex items-center gap-3 py-2 bg-[#05070D]/90 backdrop-blur-sm pl-6 -ml-6">
+              <div className="absolute left-6 w-2 h-2 -ml-1 rounded-full bg-cyan-500 border border-slate-900" />
+              <span className="text-xs font-black font-mono text-cyan-400 tracking-widest pl-4">{year}</span>
+              <div className="h-px flex-1 bg-gradient-to-r from-cyan-500/20 to-transparent" />
+            </div>
+            <div className="pl-6 border-l border-transparent">
+              {groupedCerts[year].map((c) => {
+                const currentIndex = globalIndex++;
+                return <CertRow key={c.id} cert={c} index={currentIndex} />;
+              })}
+            </div>
+          </div>
         ))}
-        <div className="flex items-center gap-3 px-3 py-3 mt-2">
+        <div className="flex items-center gap-3 px-3 py-3 mt-2 pl-6">
           <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, #06b6d420, transparent)' }} />
           <span className="text-[9px] font-mono text-slate-700">END OF PLAYLIST</span>
           <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, transparent, #06b6d420)' }} />

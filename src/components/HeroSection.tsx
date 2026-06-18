@@ -2,7 +2,68 @@
 
 import { motion } from 'framer-motion';
 import { profile, sessionStats, sessionNotes } from '@/data/portfolio';
+import { useEffect, useState } from 'react';
 import { useStudioStore } from '@/stores/useStudioStore';
+
+function AnimatedCounter({ value, suffix = '' }: { value: number | string; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const numericValue = typeof value === 'string' ? parseInt(value.replace(/[^0-9]/g, '')) || 0 : value;
+  const actualSuffix = typeof value === 'string' ? value.replace(/[0-9]/g, '') : suffix;
+
+  useEffect(() => {
+    let startTimestamp: number | null = null;
+    const duration = 2000;
+    
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      
+      // easeOutExpo
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setCount(Math.floor(easeProgress * numericValue));
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [numericValue]);
+
+  return <>{count}{actualSuffix}</>;
+}
+
+function ActivityMonitor() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const entries = [
+    'Portfolio Loaded',
+    'Projects Plugin Active',
+    'Music Module Ready',
+    'AI Assistant Online',
+    'Session Running'
+  ];
+
+  useEffect(() => {
+    entries.forEach((entry, i) => {
+      setTimeout(() => {
+        setLogs(prev => [...prev, `✓ ${entry}`]);
+      }, (i + 1) * 600);
+    });
+  }, []);
+
+  return (
+    <div className="mt-6 p-3 bg-slate-900/80 rounded-lg border flex flex-col justify-end h-32 relative overflow-hidden" style={{ borderColor: '#1e293b' }}>
+      <div className="absolute top-2 left-3 text-[8px] font-mono text-slate-500 uppercase tracking-widest">Session Log</div>
+      <div className="flex flex-col gap-1 z-10 font-mono text-[10px]">
+        {logs.map((log, i) => (
+          <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-emerald-400">
+            {log}
+          </motion.div>
+        ))}
+        <motion.div animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-3 bg-amber-500 mt-1" />
+      </div>
+    </div>
+  );
+}
 
 function WaveformBar({ delay }: { delay: number }) {
   return (
@@ -76,59 +137,81 @@ export default function HeroSection() {
             ))}
           </div>
 
-          {/* Waveform */}
-          <div className="mt-4 flex items-end gap-0.5 h-10 px-2">
-            {Array.from({ length: 48 }).map((_, i) => (
-              <WaveformBar key={i} delay={i * 0.04} />
-            ))}
-          </div>
+          {/* Activity Monitor */}
+          <ActivityMonitor />
         </div>
 
-        {/* Center: Main title */}
-        <div className="flex-1 flex flex-col justify-center">
+        {/* Center: Main title & Artwork */}
+        <div className="flex-1 flex flex-col justify-center relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex flex-col md:flex-row items-start md:items-center gap-8"
           >
-            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em] mb-2">
-              Now Opening Session
+            <div className="flex-1">
+              <div className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em] mb-2">
+                Now Opening Session
+              </div>
+              <h1
+                className="text-5xl md:text-7xl font-black tracking-tight leading-none mb-3"
+                style={{
+                  background: 'linear-gradient(135deg, #f59e0b, #f97316, #fbbf24)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                {profile.title}
+              </h1>
+              <p className="text-base font-mono text-slate-400 mb-1">{profile.education}</p>
+              <p className="text-sm font-mono text-slate-600 mb-6">{profile.university}</p>
+
+              <p className="text-sm text-slate-400 leading-relaxed max-w-lg mb-6">{profile.bio}</p>
+
+              {/* Role tags */}
+              <div className="flex flex-wrap gap-2">
+                {profile.roles.map((role, i) => {
+                  const colors = ['#f97316', '#06b6d4', '#a78bfa', '#34d399'];
+                  return (
+                    <span
+                      key={role}
+                      className="px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider border"
+                      style={{
+                        color: colors[i % colors.length],
+                        borderColor: `${colors[i % colors.length]}40`,
+                        background: `${colors[i % colors.length]}10`,
+                      }}
+                    >
+                      {role}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
-            <h1
-              className="text-5xl md:text-7xl font-black tracking-tight leading-none mb-3"
-              style={{
-                background: 'linear-gradient(135deg, #f59e0b, #f97316, #fbbf24)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+
+            {/* Vinyl Record Artwork */}
+            <motion.div 
+              className="hidden lg:flex w-32 h-32 shrink-0 rounded-full border-4 border-slate-900 shadow-2xl relative overflow-hidden items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #111, #222)' }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
             >
-              {profile.title}
-            </h1>
-            <p className="text-base font-mono text-slate-400 mb-1">{profile.education}</p>
-            <p className="text-sm font-mono text-slate-600 mb-6">{profile.university}</p>
-
-            <p className="text-sm text-slate-400 leading-relaxed max-w-lg mb-6">{profile.bio}</p>
-
-            {/* Role tags */}
-            <div className="flex flex-wrap gap-2">
-              {profile.roles.map((role, i) => {
-                const colors = ['#f97316', '#06b6d4', '#a78bfa', '#34d399'];
-                return (
-                  <span
-                    key={role}
-                    className="px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider border"
-                    style={{
-                      color: colors[i % colors.length],
-                      borderColor: `${colors[i % colors.length]}40`,
-                      background: `${colors[i % colors.length]}10`,
-                    }}
-                  >
-                    {role}
-                  </span>
-                );
-              })}
-            </div>
+              {/* Record Grooves */}
+              <div className="absolute inset-2 rounded-full border border-slate-700/50" />
+              <div className="absolute inset-4 rounded-full border border-slate-700/50" />
+              <div className="absolute inset-6 rounded-full border border-slate-700/50" />
+              <div className="absolute inset-8 rounded-full border border-slate-700/50" />
+              <div className="absolute inset-10 rounded-full border border-slate-700/50" />
+              {/* Record Label */}
+              <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center relative">
+                <div className="w-3 h-3 rounded-full bg-slate-900" />
+                <span className="absolute text-[5px] font-black tracking-widest text-slate-900 font-mono top-1">VIBE</span>
+                <span className="absolute text-[5px] font-black tracking-widest text-slate-900 font-mono bottom-1">STUDIO</span>
+              </div>
+              {/* Light Reflection */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/10 pointer-events-none rounded-full" />
+            </motion.div>
           </motion.div>
         </div>
 
@@ -162,10 +245,20 @@ export default function HeroSection() {
           <div className="flex flex-col gap-2 p-3 rounded-lg border bg-slate-900/50" style={{ borderColor: '#1e293b' }}>
             <span className="text-[9px] font-mono text-amber-500 uppercase tracking-widest mb-1 border-b border-amber-500/20 pb-1">Session Stats</span>
             <div className="grid grid-cols-2 gap-3 text-xs font-mono mt-1">
-              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Projects</span><span className="text-slate-300">{sessionStats.projects}</span></div>
-              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Stack</span><span className="text-slate-300">{sessionStats.techStack}</span></div>
-              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Certs</span><span className="text-slate-300">{sessionStats.certifications}</span></div>
-              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Shows</span><span className="text-slate-300">{sessionStats.performances}</span></div>
+              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Projects</span><span className="text-slate-300 font-bold"><AnimatedCounter value={sessionStats.projects} /></span></div>
+              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Stack</span><span className="text-slate-300 font-bold"><AnimatedCounter value={sessionStats.techStack} /></span></div>
+              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Certs</span><span className="text-slate-300 font-bold"><AnimatedCounter value={sessionStats.certifications} /></span></div>
+              <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Shows</span><span className="text-slate-300 font-bold"><AnimatedCounter value={sessionStats.performances} /></span></div>
+            </div>
+          </div>
+          
+          {/* Animated Audio Visualizer Replacement */}
+          <div className="mt-auto flex flex-col gap-2">
+            <span className="text-[9px] font-mono text-slate-600 uppercase tracking-widest border-b border-slate-800 pb-1">Master Output</span>
+            <div className="flex items-end gap-[2px] h-12 w-full mt-1">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <WaveformBar key={i} delay={i * 0.05} />
+              ))}
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type SectionId =
   | "hero"
@@ -9,12 +10,17 @@ export type SectionId =
   | "skills"
   | "hobbies"
   | "music"
+  | "achievements"
   | "contact";
 
 interface StudioStore {
   // Mode
-  isBoringMode: boolean;
-  toggleBoringMode: () => void;
+  isRecruiterMode: boolean;
+  toggleRecruiterMode: () => void;
+
+  // Sound Engine
+  soundEnabled: boolean;
+  toggleSound: () => void;
 
   // Active section
   activeSection: SectionId;
@@ -63,72 +69,86 @@ interface StudioStore {
   nextPlaybackStep: () => void;
 }
 
-export const useStudioStore = create<StudioStore>((set, get) => ({
-  isBoringMode: false,
-  toggleBoringMode: () => set((s) => ({ isBoringMode: !s.isBoringMode })),
+export const useStudioStore = create<StudioStore>()(
+  persist(
+    (set, get) => ({
+      isRecruiterMode: false,
+      toggleRecruiterMode: () => set((s) => ({ isRecruiterMode: !s.isRecruiterMode })),
 
-  activeSection: "hero",
-  setActiveSection: (section) => set({ activeSection: section }),
+      soundEnabled: false,
+      toggleSound: () => set((s) => ({ soundEnabled: !s.soundEnabled })),
 
-  isBrowserOpen: true,
-  toggleBrowser: () => set((s) => ({ isBrowserOpen: !s.isBrowserOpen })),
+      activeSection: "hero",
+      setActiveSection: (section) => set({ activeSection: section }),
 
-  isStartupComplete: false,
-  completeStartup: () => set({ isStartupComplete: true }),
+      isBrowserOpen: true,
+      toggleBrowser: () => set((s) => ({ isBrowserOpen: !s.isBrowserOpen })),
 
-  isArtistMode: false,
-  setArtistMode: (val) => set({ isArtistMode: val }),
+      isStartupComplete: false,
+      completeStartup: () => set({ isStartupComplete: true }),
 
-  typedKeys: "",
-  addTypedKey: (key) => {
-    const newKeys = (get().typedKeys + key).slice(-6);
-    set({ typedKeys: newKeys });
-    if (newKeys === "ethnix") {
-      set({ isArtistMode: true, typedKeys: "" });
+      isArtistMode: false,
+      setArtistMode: (val) => set({ isArtistMode: val }),
+
+      typedKeys: "",
+      addTypedKey: (key) => {
+        const newKeys = (get().typedKeys + key).slice(-8); // "wadhwave" is 8 chars
+        set({ typedKeys: newKeys });
+        if (newKeys === "wadhwave") {
+          set({ isArtistMode: true, typedKeys: "" });
+        }
+      },
+      resetTypedKeys: () => set({ typedKeys: "" }),
+
+      isMixerOpen: true,
+      toggleMixer: () => set((s) => ({ isMixerOpen: !s.isMixerOpen })),
+
+      expandedProjects: new Set(),
+      toggleExpandProject: (id) => {
+        const s = get().expandedProjects;
+        const next = new Set(s);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        set({ expandedProjects: next });
+      },
+
+      expandedCertificates: new Set(),
+      toggleExpandCertificate: (id) => {
+        const s = get().expandedCertificates;
+        const next = new Set(s);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        set({ expandedCertificates: next });
+      },
+
+      expandedExperiences: new Set(),
+      toggleExpandExperience: (id) => {
+        const s = get().expandedExperiences;
+        const next = new Set(s);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        set({ expandedExperiences: next });
+      },
+
+      currentVoiceId: null,
+      setCurrentVoiceId: (id) => set({ currentVoiceId: id }),
+
+      isPlaybackMode: false,
+      playbackIndex: 0,
+      startPlayback: () => set({ isPlaybackMode: true, playbackIndex: 0 }),
+      stopPlayback: () => set({ isPlaybackMode: false, playbackIndex: 0 }),
+      nextPlaybackStep: () => {
+        const sections: SectionId[] = ['hero', 'projects', 'experience', 'leadership', 'skills', 'music', 'contact'];
+        const nextIndex = (get().playbackIndex + 1) % sections.length;
+        set({ playbackIndex: nextIndex, activeSection: sections[nextIndex] });
+      },
+    }),
+    {
+      name: "vibe-studio-storage",
+      partialize: (state) => ({
+        isRecruiterMode: state.isRecruiterMode,
+        soundEnabled: state.soundEnabled,
+      }), // only persist these fields
     }
-  },
-  resetTypedKeys: () => set({ typedKeys: "" }),
-
-  isMixerOpen: true,
-  toggleMixer: () => set((s) => ({ isMixerOpen: !s.isMixerOpen })),
-
-  expandedProjects: new Set(),
-  toggleExpandProject: (id) => {
-    const s = get().expandedProjects;
-    const next = new Set(s);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    set({ expandedProjects: next });
-  },
-
-  expandedCertificates: new Set(),
-  toggleExpandCertificate: (id) => {
-    const s = get().expandedCertificates;
-    const next = new Set(s);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    set({ expandedCertificates: next });
-  },
-
-  expandedExperiences: new Set(),
-  toggleExpandExperience: (id) => {
-    const s = get().expandedExperiences;
-    const next = new Set(s);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    set({ expandedExperiences: next });
-  },
-
-  currentVoiceId: null,
-  setCurrentVoiceId: (id) => set({ currentVoiceId: id }),
-
-  isPlaybackMode: false,
-  playbackIndex: 0,
-  startPlayback: () => set({ isPlaybackMode: true, playbackIndex: 0 }),
-  stopPlayback: () => set({ isPlaybackMode: false, playbackIndex: 0 }),
-  nextPlaybackStep: () => {
-    const sections: SectionId[] = ['hero', 'projects', 'experience', 'leadership', 'skills', 'music', 'contact'];
-    const nextIndex = (get().playbackIndex + 1) % sections.length;
-    set({ playbackIndex: nextIndex, activeSection: sections[nextIndex] });
-  },
-}));
+  )
+);

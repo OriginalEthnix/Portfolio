@@ -11,9 +11,20 @@ export default function ContactSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isNameValid || !isEmailValid || !isMessageValid) return;
     setStatus('sending');
     // Simulate sending
     setTimeout(() => setStatus('sent'), 1500);
+  };
+
+  const isNameValid = formData.name.length > 2 || formData.name.length === 0;
+  const isEmailValid = (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) || formData.email.length === 0;
+  const isMessageValid = formData.message.length > 10 || formData.message.length === 0;
+
+  const getInputClass = (isValid: boolean, value: string) => {
+    const baseClass = "w-full bg-slate-900/50 border rounded px-3 py-2 text-sm text-slate-200 outline-none transition-colors font-mono ";
+    if (value.length === 0) return baseClass + "border-slate-700 focus:border-blue-500";
+    return baseClass + (isValid ? "border-emerald-500 focus:border-emerald-400" : "border-red-500 focus:border-red-400");
   };
 
   return (
@@ -126,7 +137,7 @@ export default function ContactSection() {
                 type="text"
                 placeholder="Name"
                 required
-                className="w-full bg-slate-900/50 border border-slate-700 rounded px-3 py-2 text-sm text-slate-200 outline-none focus:border-blue-500 transition-colors font-mono"
+                className={getInputClass(formData.name.length > 2, formData.name)}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
@@ -137,7 +148,7 @@ export default function ContactSection() {
                 type="email"
                 placeholder="Email"
                 required
-                className="w-full bg-slate-900/50 border border-slate-700 rounded px-3 py-2 text-sm text-slate-200 outline-none focus:border-blue-500 transition-colors font-mono"
+                className={getInputClass(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email), formData.email)}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -148,7 +159,7 @@ export default function ContactSection() {
                 placeholder="Message..."
                 required
                 rows={4}
-                className="w-full bg-slate-900/50 border border-slate-700 rounded px-3 py-2 text-sm text-slate-200 outline-none focus:border-blue-500 transition-colors resize-none font-mono"
+                className={getInputClass(formData.message.length > 10, formData.message) + " resize-none"}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               />
@@ -160,9 +171,9 @@ export default function ContactSection() {
               className="w-full py-2.5 rounded font-mono text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               style={{ background: '#3b82f6', color: '#fff', boxShadow: '0 0 15px rgba(59,130,246,0.3)' }}
             >
-              {status === 'idle' && <>📤 EXPORT TRACK</>}
+              {status === 'idle' && <>BOUNCE TRACK (SEND)</>}
               {status === 'sending' && 'RENDERING...'}
-              {status === 'sent' && 'TRACK EXPORTED!'}
+              {status === 'sent' && 'TRACK BOUNCED!'}
             </motion.button>
           </form>
         </motion.div>

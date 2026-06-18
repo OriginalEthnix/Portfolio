@@ -159,7 +159,22 @@ function ExperienceTrack({ exp, index }: { exp: Experience; index: number }) {
               <div className="space-y-3">
                 <div>
                   <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: exp.color }}>Impact</div>
-                  <p className="text-xs text-slate-400 leading-relaxed italic">{exp.impact}</p>
+                  <div className="p-3 rounded border bg-black/40 flex flex-col gap-2" style={{ borderColor: `${exp.color}40` }}>
+                    <p className="text-xs text-slate-300 leading-relaxed italic">"{exp.impact}"</p>
+                    {/* Visual Impact Metric */}
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="text-[10px] font-mono text-slate-400">Scale/Reach:</div>
+                      <div className="flex-1 h-1.5 rounded-full bg-slate-800 overflow-hidden relative">
+                        <motion.div 
+                          className="absolute top-0 bottom-0 left-0"
+                          style={{ background: exp.color, boxShadow: `0 0 10px ${exp.glow}` }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${70 + Math.random() * 30}%` }}
+                          transition={{ duration: 1.5, ease: "easeOut" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="rounded-lg p-3 flex items-center justify-center"
                   style={{ background: `${exp.color}10`, border: `1px solid ${exp.color}20` }}>
@@ -184,7 +199,17 @@ export default function ExperienceSection() {
         <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, #a78bfa30, transparent)' }} />
         <span className="text-[9px] font-mono text-slate-600">{experiences.length} tracks</span>
       </div>
-      <div className="flex-1 overflow-y-auto pb-8">
+      <div className="flex-1 overflow-y-auto pb-8 relative">
+        {/* Playhead Scrubber */}
+        <motion.div
+          className="absolute left-0 right-0 h-px bg-rose-500/50 z-50 pointer-events-none"
+          style={{ boxShadow: '0 0 8px rgba(244, 63, 94, 0.6)' }}
+          initial={{ top: 0 }}
+          animate={{ top: '100%' }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+        >
+          <div className="absolute -left-1 -top-1.5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-rose-500" />
+        </motion.div>
         {experiences.map((e, i) => {
           // Extract year from duration (e.g. "June 2024–Present" -> "2024")
           const currentYear = e.duration.match(/\b20\d{2}\b/)?.[0] || '';

@@ -6,7 +6,7 @@ import { useStudioStore } from '@/stores/useStudioStore';
 import { useLofiEngine } from '@/stores/useLofiEngine';
 import { profile } from '@/data/portfolio';
 import {
-  Play, Square, Pause, Timer
+  Play, Square, Pause, Timer, Volume2, VolumeX
 } from 'lucide-react';
 
 
@@ -64,7 +64,7 @@ function NowPlayingMarquee({ isPlaying }: { isPlaying: boolean }) {
 }
 
 export default function TopBar() {
-  const { isBoringMode, toggleBoringMode } = useStudioStore();
+  const { isRecruiterMode, toggleRecruiterMode, soundEnabled, toggleSound } = useStudioStore();
   const { isPlaying, isInitialized, initAudio } = useLofiEngine();
   const [bpm] = useState(140);
 
@@ -189,25 +189,46 @@ export default function TopBar() {
 
           <div className="w-px h-6 bg-slate-800 shrink-0 hidden sm:block" />
 
-          {/* Boring Mode Toggle */}
+          {/* Sound Toggle */}
+          <div className="flex items-center gap-2 shrink-0">
+            <motion.button
+              onClick={toggleSound}
+              className="w-7 h-7 rounded flex items-center justify-center cursor-pointer"
+              style={{
+                background: soundEnabled ? '#10b98120' : '#1e293b',
+                border: `1px solid ${soundEnabled ? '#10b98160' : '#2d3a4f'}`,
+              }}
+              whileTap={{ scale: 0.9 }}
+            >
+              {soundEnabled ? (
+                <Volume2 size={12} style={{ color: '#10b981' }} />
+              ) : (
+                <VolumeX size={12} className="text-slate-600" />
+              )}
+            </motion.button>
+          </div>
+
+          <div className="w-px h-6 bg-slate-800 shrink-0 hidden sm:block" />
+
+          {/* Recruiter Mode Toggle */}
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[9px] font-mono text-slate-600 uppercase hidden xl:block">
-              {isBoringMode ? 'Resume' : 'Vibe'}
+              {isRecruiterMode ? 'Recruiter' : 'DAW Mode'}
             </span>
             <motion.button
-              onClick={toggleBoringMode}
+              onClick={toggleRecruiterMode}
               className="relative w-10 h-5 rounded-full border cursor-pointer"
               style={{
-                backgroundColor: isBoringMode ? '#374151' : '#1a0a00',
-                borderColor: isBoringMode ? '#6b7280' : '#f59e0b80',
-                boxShadow: isBoringMode ? 'none' : '0 0 8px rgba(245,158,11,0.3)',
+                backgroundColor: isRecruiterMode ? '#374151' : '#1a0a00',
+                borderColor: isRecruiterMode ? '#6b7280' : '#f59e0b80',
+                boxShadow: isRecruiterMode ? 'none' : '0 0 8px rgba(245,158,11,0.3)',
               }}
               whileTap={{ scale: 0.95 }}
             >
               <motion.div
                 className="absolute top-0.5 w-4 h-4 rounded-full"
-                style={{ backgroundColor: isBoringMode ? '#6b7280' : '#f59e0b' }}
-                animate={{ left: isBoringMode ? '2px' : '22px' }}
+                style={{ backgroundColor: isRecruiterMode ? '#6b7280' : '#f59e0b' }}
+                animate={{ left: isRecruiterMode ? '22px' : '2px' }}
                 transition={{ type: 'spring', stiffness: 600, damping: 35 }}
               />
             </motion.button>
