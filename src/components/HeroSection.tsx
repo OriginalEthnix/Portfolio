@@ -43,17 +43,25 @@ function ActivityMonitor() {
   ];
 
   useEffect(() => {
+    setLogs([]); // Reset logs on mount
+    const timeouts: NodeJS.Timeout[] = [];
     entries.forEach((entry, i) => {
-      setTimeout(() => {
-        setLogs(prev => [...prev, `✓ ${entry}`]);
+      const timeout = setTimeout(() => {
+        setLogs(prev => {
+          const newEntry = `✓ ${entry}`;
+          if (prev.includes(newEntry)) return prev;
+          return [...prev, newEntry];
+        });
       }, (i + 1) * 600);
+      timeouts.push(timeout);
     });
+    return () => timeouts.forEach(clearTimeout);
   }, []);
 
   return (
-    <div className="mt-6 p-3 bg-slate-900/80 rounded-lg border flex flex-col justify-end h-32 relative overflow-hidden" style={{ borderColor: '#1e293b' }}>
-      <div className="absolute top-2 left-3 text-[8px] font-mono text-slate-500 uppercase tracking-widest">Session Log</div>
-      <div className="flex flex-col gap-1 z-10 font-mono text-[10px]">
+    <div className="mt-6 px-3 pb-3 pt-10 bg-slate-900/80 rounded-lg border flex flex-col justify-start h-40 relative overflow-hidden" style={{ borderColor: '#1e293b' }}>
+      <div className="absolute top-3 left-3 text-[8px] font-mono text-slate-500 uppercase tracking-widest">Session Log</div>
+      <div className="flex flex-col gap-2 z-10 font-mono text-[10px] leading-relaxed">
         {logs.map((log, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-emerald-400">
             {log}
@@ -108,18 +116,18 @@ export default function HeroSection() {
         {/* Left: DAW project info */}
         <div className="shrink-0 w-full md:w-72">
           {/* File header */}
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex gap-1">
+          <div className="flex items-center gap-2 mb-4 overflow-hidden">
+            <div className="flex gap-1 shrink-0">
               {['#f97316', '#f59e0b', '#34d399'].map((c) => (
                 <div key={c} className="w-2 h-2 rounded-full" style={{ background: c }} />
               ))}
             </div>
-            <span className="text-[10px] font-mono text-slate-500">Dhruv_Wadhwa_Portfolio.flp</span>
+            <span className="text-[10px] font-mono text-slate-500 truncate">Dhruv_Wadhwa_Portfolio.flp</span>
           </div>
 
           {/* Project metadata table */}
           <div
-            className="rounded-lg border p-4 space-y-2.5 font-mono text-xs"
+            className="rounded-lg border p-4 space-y-2.5 font-mono text-xs overflow-hidden"
             style={{ background: 'rgba(5,7,13,0.8)', borderColor: '#1e293b' }}
           >
             {[
@@ -129,10 +137,10 @@ export default function HeroSection() {
               { key: 'Status', val: profile.status, color: '#f97316' },
               { key: 'Version', val: profile.version, color: '#60a5fa' },
             ].map(({ key, val, color }) => (
-              <div key={key} className="flex items-baseline gap-2">
-                <span className="text-slate-600 w-16 shrink-0">{key}</span>
+              <div key={key} className="grid grid-cols-[4rem_auto_minmax(0,1fr)] gap-2 items-baseline">
+                <span className="text-slate-600">{key}</span>
                 <span className="text-slate-700">:</span>
-                <span style={{ color }}>{val}</span>
+                <span className="truncate" style={{ color }} title={val}>{val}</span>
               </div>
             ))}
           </div>
