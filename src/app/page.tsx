@@ -1,65 +1,114 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useLofiEngine } from "@/stores/useLofiEngine";
+import { useStudioStore } from "@/stores/useStudioStore";
+
+import StartupScreen from "@/components/StartupScreen";
+import TopBar from "@/components/TopBar";
+import ContactBar from "@/components/ContactBar";
+import BrowserPanel from "@/components/BrowserPanel";
+import WorkspaceLayout from "@/components/WorkspaceLayout";
+import BoringView from "@/components/BoringView";
+import AudioControls from "@/components/AudioControls";
+import VibeAssistant from "@/components/VibeAssistant";
+import SessionPlayback from "@/components/SessionPlayback";
 
 export default function Home() {
+  const { isBoringMode, isStartupComplete, addTypedKey } = useStudioStore();
+  const initAudio = useLofiEngine((s) => s.initAudio);
+  const isInitialized = useLofiEngine((s) => s.isInitialized);
+  const cleanup = useLofiEngine((s) => s.cleanup);
+
+  const handleUserInteraction = useCallback(() => {
+    if (!isInitialized) {
+      initAudio();
+    }
+  }, [isInitialized, initAudio]);
+
+  useEffect(() => {
+    // Listen for first user interaction to bypass autoplay restrictions
+    const events = ["click", "scroll", "keydown", "touchstart"] as const;
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserInteraction, { once: true });
+    });
+
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserInteraction);
+      });
+      cleanup();
+    };
+  }, [handleUserInteraction, cleanup]);
+
+  // Easter egg listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in input/textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      addTypedKey(e.key.toLowerCase());
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [addTypedKey]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex flex-col flex-1 min-h-screen" style={{ background: "#05070D" }}>
+      <AnimatePresence mode="wait">
+        {!isStartupComplete ? (
+          <StartupScreen key="startup" />
+        ) : isBoringMode ? (
+          <BoringView key="boring" />
+        ) : (
+          <div key="vibes" className="flex flex-col h-screen overflow-hidden">
+            <TopBar />
+            <ContactBar />
+            
+            <div className="flex flex-1 overflow-hidden relative">
+              <BrowserPanel />
+              <WorkspaceLayout />
+              
+              {/* V2 Integrations */}
+              <VibeAssistant />
+              <SessionPlayback />
+            </div>
+
+            <AudioControls />
+
+            {/* Status bar */}
+            <footer
+              className="border-t px-4 py-1 flex items-center justify-between shrink-0 z-40"
+              style={{ background: "#080b12", borderColor: "#1e293b" }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 led-pulse" />
+                  <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">
+                    READY
+                  </span>
+                </div>
+                <span className="text-[9px] font-mono text-slate-700">|</span>
+                <span className="text-[9px] font-mono text-slate-600">
+                  CPU: 4%
+                </span>
+                <span className="text-[9px] font-mono text-slate-700">|</span>
+                <span className="text-[9px] font-mono text-slate-600">
+                  RAM: 82MB
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-[9px] font-mono text-slate-600">
+                  Dhruv Wadhwa &copy; {new Date().getFullYear()}
+                </span>
+                <span className="text-[9px] font-mono text-amber-500/60 uppercase tracking-widest">
+                  THE VIBE STUDIO
+                </span>
+              </div>
+            </footer>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
