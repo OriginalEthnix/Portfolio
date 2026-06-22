@@ -18,7 +18,7 @@ export const contactInfo = {
   email: "dhruvwadhwa8661@gmail.com",
   phone: "+91-XXXXXXXXXX",
   location: "VIT Chennai, Tamil Nadu, India",
-  resume: "#",
+  resume: "/resume.pdf",
   portfolio: "#",
 };
 

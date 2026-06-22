@@ -101,6 +101,7 @@ export default function ContactSection() {
             
             <motion.a
               href={contactInfo.resume || '#'}
+              download
               className="flex items-center justify-center gap-2 w-full py-2.5 rounded font-mono text-xs uppercase tracking-wider border cursor-pointer"
               style={{ color: '#e2e8f0', borderColor: '#475569', background: '#1e293b' }}
               whileHover={{ scale: 1.02, borderColor: '#94a3b8' }}

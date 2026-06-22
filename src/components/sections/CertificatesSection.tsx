@@ -33,18 +33,18 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
       transition={{ delay: index * 0.07 }}
       className="playlist-row"
     >
-      <div className="flex items-center gap-2 px-3 py-2">
+      <div className="flex items-center gap-1 sm:gap-2 px-1 sm:px-3 py-2 w-full">
         {/* Track index */}
-        <span className="text-[9px] font-mono text-slate-600 w-5 text-center shrink-0">
+        <span className="text-[9px] font-mono text-slate-600 w-4 sm:w-5 text-center shrink-0">
           {String(index + 1).padStart(2, '0')}
         </span>
 
         {/* Color indicator */}
-        <div className="w-1 h-7 rounded-full shrink-0" style={{ background: cert.color, boxShadow: `0 0 6px ${cert.glow}` }} />
+        <div className="w-1 h-6 sm:h-7 rounded-full shrink-0" style={{ background: cert.color, boxShadow: `0 0 6px ${cert.glow}` }} />
 
         {/* Main track */}
         <motion.div
-          className="flex-1 flex items-center gap-3 px-3 py-1.5 rounded cursor-pointer"
+          className="flex-1 flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 rounded cursor-pointer min-w-0"
           style={{
             background: `linear-gradient(90deg, ${cert.color}18, ${cert.color}06)`,
             border: `1px solid ${cert.color}25`,
@@ -53,22 +53,22 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
           onClick={() => toggleExpandCertificate(cert.id)}
         >
           <div className="flex-1 min-w-0 flex items-center justify-between">
-            <div>
-              <div className="text-sm font-semibold text-slate-200 truncate flex items-center gap-2">
-                {cert.name}
-                <span className="px-1.5 py-[1px] rounded text-[7px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                  <div className="w-1 h-1 rounded-full bg-emerald-400" />
+            <div className="min-w-0 flex-1">
+              <div className="text-xs sm:text-sm font-semibold text-slate-200 truncate flex items-center gap-1.5 sm:gap-2">
+                <span className="truncate">{cert.name}</span>
+                <span className="px-1 sm:px-1.5 py-[1px] rounded text-[6px] sm:text-[7px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 shrink-0">
+                  <div className="w-1 h-1 rounded-full bg-emerald-400 shrink-0" />
                   <span className="hidden sm:inline">VERIFIED</span>
                 </span>
               </div>
-              <div className="text-[10px] font-mono" style={{ color: `${cert.color}aa` }}>
+              <div className="text-[9px] sm:text-[10px] font-mono truncate mt-0.5 sm:mt-0" style={{ color: `${cert.color}aa` }}>
                 {cert.issuer} &nbsp;•&nbsp; {cert.date}
               </div>
             </div>
           </div>
 
           {/* Mini VU bars */}
-          <div className="flex items-end gap-0.5 h-5 opacity-30">
+          <div className="hidden sm:flex items-end gap-0.5 h-5 opacity-30 shrink-0 ml-2">
             {Array.from({ length: 8 }).map((_, i) => (
               <motion.div
                 key={i}
@@ -83,32 +83,32 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
         </motion.div>
 
         {/* Controls */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-1">
           <motion.button
             onClick={handleVoice}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
-            className="w-6 h-6 rounded flex items-center justify-center border cursor-pointer"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded flex items-center justify-center border cursor-pointer shrink-0"
             style={{
               color: isPlaying ? cert.color : '#475569',
               borderColor: isPlaying ? `${cert.color}60` : '#2d3a4f',
               background: isPlaying ? `${cert.color}15` : 'transparent',
             }}
           >
-            {isPlaying ? <Square size={8} /> : <Play size={8} />}
+            {isPlaying ? <Square size={10} className="sm:w-2 sm:h-2" /> : <Play size={10} className="sm:w-2 sm:h-2" />}
           </motion.button>
           <motion.button
             onClick={() => toggleExpandCertificate(cert.id)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono cursor-pointer border"
+            className="flex items-center justify-center gap-1 w-8 h-8 sm:w-auto sm:h-auto sm:px-2 sm:py-1 rounded text-[10px] font-mono cursor-pointer border shrink-0"
             style={{
               color: isExpanded ? cert.color : '#475569',
               borderColor: isExpanded ? `${cert.color}50` : '#2d3a4f',
               background: isExpanded ? `${cert.color}10` : 'transparent',
             }}
           >
-            {isExpanded ? <ChevronUp size={8} /> : <ChevronDown size={8} />}
+            {isExpanded ? <ChevronUp size={12} className="sm:w-2 sm:h-2" /> : <ChevronDown size={12} className="sm:w-2 sm:h-2" />}
             <span className="hidden sm:inline">Know More</span>
           </motion.button>
         </div>
@@ -125,7 +125,7 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
             className="overflow-hidden"
           >
             <div
-              className="mx-2 sm:mx-6 md:mx-10 mb-3 p-3 sm:p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="mx-1 sm:mx-6 md:mx-10 mb-3 p-3 sm:p-4 rounded-lg flex flex-col md:grid md:grid-cols-2 gap-4"
               style={{ background: 'rgba(5,7,13,0.8)', border: `1px solid ${cert.color}20` }}
             >
               {/* Left */}
@@ -171,11 +171,11 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
 
               {/* Right: cert preview area */}
               <div
-                className="rounded-lg flex items-center justify-center relative overflow-hidden p-2 min-h-[180px]"
+                className="rounded-lg flex items-center justify-center relative overflow-hidden p-2 min-h-[140px] sm:min-h-[180px] w-full"
                 style={{ background: `linear-gradient(135deg, ${cert.color}12, ${cert.color}04)`, border: `1px solid ${cert.color}20` }}
               >
                 {cert.image ? (
-                  <img src={cert.image} alt={cert.name} className="w-full h-full object-contain" />
+                  <img src={cert.image} alt={cert.name} className="max-w-full h-auto max-h-[200px] object-contain" />
                 ) : (
                   <div className="flex flex-col items-center text-center opacity-50">
                     <div className="text-3xl drop-shadow-md mb-2">🏅</div>
@@ -213,18 +213,18 @@ export default function CertificatesSection() {
         <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, #06b6d430, transparent)' }} />
         <span className="text-[9px] font-mono text-slate-600">{certificates.length} tracks</span>
       </div>
-      <div className="flex-1 overflow-y-auto pb-4 relative pl-4">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pb-4 relative pl-2 sm:pl-4">
         {/* Vertical Timeline Line */}
-        <div className="absolute left-6 top-0 bottom-0 w-px bg-slate-800" />
+        <div className="absolute left-4 sm:left-6 top-0 bottom-0 w-px bg-slate-800" />
         
         {years.map((year) => (
           <div key={year} className="mb-4 relative">
-            <div className="sticky top-0 z-10 flex items-center gap-3 py-2 bg-[#05070D]/90 backdrop-blur-sm pl-6 -ml-6">
-              <div className="absolute left-6 w-2 h-2 -ml-1 rounded-full bg-cyan-500 border border-slate-900" />
-              <span className="text-xs font-black font-mono text-cyan-400 tracking-widest pl-4">{year}</span>
+            <div className="sticky top-0 z-10 flex items-center gap-2 sm:gap-3 py-2 bg-[#05070D]/90 backdrop-blur-sm pl-4 sm:pl-6 -ml-4 sm:-ml-6">
+              <div className="absolute left-4 sm:left-6 w-2 h-2 -ml-1 rounded-full bg-cyan-500 border border-slate-900" />
+              <span className="text-[10px] sm:text-xs font-black font-mono text-cyan-400 tracking-widest pl-4">{year}</span>
               <div className="h-px flex-1 bg-gradient-to-r from-cyan-500/20 to-transparent" />
             </div>
-            <div className="pl-6 border-l border-transparent">
+            <div className="pl-4 sm:pl-6 border-l border-transparent">
               {groupedCerts[year].map((c) => {
                 const currentIndex = globalIndex++;
                 return <CertRow key={c.id} cert={c} index={currentIndex} />;

@@ -309,7 +309,7 @@ export default function TopBar() {
           <div className="mt-4 border-t border-slate-800 pt-4">
             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block mb-3 pl-1">Quick Links</span>
             <div className="flex flex-col gap-2">
-              <a href={contactInfo.resume || "#"} className="px-4 py-3 rounded-lg bg-slate-800/50 text-slate-300 text-sm font-mono border border-slate-700/50 hover:bg-slate-800 transition-colors">Download Resume</a>
+              <a href={contactInfo.resume || "#"} download className="px-4 py-3 rounded-lg bg-slate-800/50 text-slate-300 text-sm font-mono border border-slate-700/50 hover:bg-slate-800 transition-colors">Download Resume</a>
               <a href={socialLinks.github || "#"} className="px-4 py-3 rounded-lg bg-slate-800/50 text-slate-300 text-sm font-mono border border-slate-700/50 hover:bg-slate-800 transition-colors">GitHub Profile</a>
               <a href={socialLinks.linkedin || "#"} className="px-4 py-3 rounded-lg bg-slate-800/50 text-slate-300 text-sm font-mono border border-slate-700/50 hover:bg-slate-800 transition-colors">LinkedIn</a>
             </div>
