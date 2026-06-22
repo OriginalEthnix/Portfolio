@@ -3,10 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { certificates, type Certificate } from '@/data/portfolio';
 import { useStudioStore } from '@/stores/useStudioStore';
+import { useLofiEngine } from '@/stores/useLofiEngine';
 import { Play, Square, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 function CertRow({ cert, index }: { cert: Certificate; index: number }) {
   const { expandedCertificates, toggleExpandCertificate, currentVoiceId, setCurrentVoiceId } = useStudioStore();
+  const { interruptForVoiceover, resumeFromVoiceover } = useLofiEngine();
   const isExpanded = expandedCertificates.has(cert.id);
   const isPlaying = currentVoiceId === cert.id;
 
@@ -14,13 +16,18 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
     if (isPlaying) {
       window.speechSynthesis?.cancel();
       setCurrentVoiceId(null);
+      resumeFromVoiceover();
     } else {
       setCurrentVoiceId(cert.id);
+      interruptForVoiceover();
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utt = new SpeechSynthesisUtterance(cert.voiceText);
         utt.rate = 0.95;
-        utt.onend = () => setCurrentVoiceId(null);
+        utt.onend = () => {
+          setCurrentVoiceId(null);
+          resumeFromVoiceover();
+        };
         window.speechSynthesis.speak(utt);
       }
     }

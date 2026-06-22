@@ -5,7 +5,7 @@ import { profile, projects, experiences, leadership, certificates, skills } from
 import { useStudioStore } from '@/stores/useStudioStore';
 
 export default function RecruiterView() {
-  const { toggleRecruiterMode } = useStudioStore();
+  const { isRecruiterMode, toggleRecruiterMode } = useStudioStore();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -15,13 +15,26 @@ export default function RecruiterView() {
       className="min-h-screen bg-white text-gray-900 p-8 md:p-16 max-w-4xl mx-auto relative"
       style={{ fontFamily: 'Georgia, serif' }}
     >
-      <div className="fixed top-6 right-6 md:top-10 md:right-10 z-50">
-        <button
+      <div className="fixed top-6 right-6 md:top-10 md:right-10 z-50 flex items-center gap-2 bg-slate-900/80 px-3 py-2 rounded-xl border border-slate-700 shadow-xl backdrop-blur-md">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-300">Vibe Mode</span>
+        <motion.button
           onClick={toggleRecruiterMode}
-          className="px-4 py-2 bg-gray-900 text-white text-xs uppercase tracking-widest font-sans rounded shadow hover:bg-gray-700 transition-colors"
+          className="relative w-12 h-6 rounded-full border cursor-pointer shrink-0"
+          style={{
+            backgroundColor: !isRecruiterMode ? '#1a0a00' : '#374151',
+            borderColor: !isRecruiterMode ? '#f59e0b80' : '#6b7280',
+            boxShadow: !isRecruiterMode ? '0 0 8px rgba(245,158,11,0.3)' : 'none',
+          }}
+          whileTap={{ scale: 0.95 }}
+          title="Toggle Vibe Mode (DAW UI)"
         >
-          Return to Vibe Mode
-        </button>
+          <motion.div
+            className="absolute top-[3px] w-4 h-4 rounded-full"
+            style={{ backgroundColor: !isRecruiterMode ? '#f59e0b' : '#9ca3af' }}
+            animate={{ left: !isRecruiterMode ? '26px' : '3px' }}
+            transition={{ type: 'spring', stiffness: 600, damping: 35 }}
+          />
+        </motion.button>
       </div>
 
       <header className="mb-8 pb-6 border-b-2 border-gray-900 text-center mt-12 md:mt-0">

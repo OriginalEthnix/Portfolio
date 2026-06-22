@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLofiEngine } from "@/stores/useLofiEngine";
 import { useStudioStore } from "@/stores/useStudioStore";
 
@@ -20,15 +20,17 @@ import SoundEngine from "@/components/SoundEngine";
 
 export default function Home() {
   const { isRecruiterMode, isStartupComplete, addTypedKey } = useStudioStore();
-  const initAudio = useLofiEngine((s) => s.initAudio);
+  const play = useLofiEngine((s) => s.play);
   const isInitialized = useLofiEngine((s) => s.isInitialized);
   const cleanup = useLofiEngine((s) => s.cleanup);
+  const autoplayBlocked = useLofiEngine((s) => s.autoplayBlocked);
+  const dismissAutoplayError = useLofiEngine((s) => s.dismissAutoplayError);
 
   const handleUserInteraction = useCallback(() => {
     if (!isInitialized) {
-      initAudio();
+      play();
     }
-  }, [isInitialized, initAudio]);
+  }, [isInitialized, play]);
 
   useEffect(() => {
     // Listen for first user interaction to bypass autoplay restrictions
@@ -58,6 +60,24 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 min-h-dvh" style={{ background: "#05070D" }}>
+      <AnimatePresence>
+        {autoplayBlocked && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 bg-red-500/10 border border-red-500/50 px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md cursor-pointer"
+            onClick={() => {
+              play();
+              dismissAutoplayError();
+            }}
+          >
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-xs font-mono text-red-200">Click anywhere to resume audio</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {!isStartupComplete ? (
           <StartupScreen key="startup" />

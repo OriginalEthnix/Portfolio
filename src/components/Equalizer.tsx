@@ -6,7 +6,8 @@ import { useLofiEngine } from '@/stores/useLofiEngine';
 
 export default function Equalizer() {
   const getFrequencyData = useLofiEngine((s) => s.getFrequencyData);
-  const isPlaying = useLofiEngine((s) => s.isPlaying);
+  const playState = useLofiEngine((s) => s.playState);
+  const isPlaying = playState === 'playing' || playState === 'ai_override';
   const [bars, setBars] = useState<number[]>(Array(16).fill(5));
   const rafRef = useRef<number>(0);
 

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects, type Project } from '@/data/portfolio';
 import { useStudioStore } from '@/stores/useStudioStore';
+import { useLofiEngine } from '@/stores/useLofiEngine';
 import { Play, Square, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 function VoiceButton({ project, isCurrentVoice, onPlay }: {
@@ -45,6 +46,7 @@ function VoiceButton({ project, isCurrentVoice, onPlay }: {
 
 function ProjectClip({ project, index }: { project: Project; index: number }) {
   const { expandedProjects, toggleExpandProject, currentVoiceId, setCurrentVoiceId } = useStudioStore();
+  const { interruptForVoiceover, resumeFromVoiceover } = useLofiEngine();
   const isExpanded = expandedProjects.has(project.id);
   const isCurrentVoice = currentVoiceId === project.id;
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -53,16 +55,24 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
     if (isCurrentVoice) {
       audioRef.current?.pause();
       setCurrentVoiceId(null);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      resumeFromVoiceover();
     } else {
       // Stop any other audio
       setCurrentVoiceId(project.id);
+      interruptForVoiceover();
       // Synthetic speech fallback since we don't have actual audio files
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(project.voiceText);
         utterance.rate = 0.95;
         utterance.pitch = 1;
-        utterance.onend = () => setCurrentVoiceId(null);
+        utterance.onend = () => {
+          setCurrentVoiceId(null);
+          resumeFromVoiceover();
+        };
         window.speechSynthesis.speak(utterance);
       }
     }

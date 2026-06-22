@@ -65,13 +65,19 @@ function NowPlayingMarquee({ isPlaying }: { isPlaying: boolean }) {
 
 export default function TopBar() {
   const { isRecruiterMode, toggleRecruiterMode, soundEnabled, toggleSound } = useStudioStore();
-  const { isPlaying, isInitialized, initAudio } = useLofiEngine();
+  const { playState, play, pause, stop, isInitialized, initAudio } = useLofiEngine();
   const [bpm] = useState(140);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const isPlaying = playState === 'playing';
+
   const handlePlay = () => {
-    if (!isInitialized) initAudio();
+    if (!isInitialized) {
+      initAudio().then(() => play());
+    } else {
+      play();
+    }
   };
 
   // Prevent body scroll when mobile menu is open
@@ -138,14 +144,19 @@ export default function TopBar() {
               <Play size={10} style={{ color: isPlaying ? '#f59e0b' : '#64748b' }} />
             </motion.button>
             <motion.button
+              onClick={pause}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="w-7 h-7 rounded flex items-center justify-center cursor-pointer"
-              style={{ background: '#1e293b', border: '1px solid #2d3a4f' }}
+              style={{ 
+                background: playState === 'paused' ? '#10b98120' : '#1e293b', 
+                border: `1px solid ${playState === 'paused' ? '#10b98160' : '#2d3a4f'}`,
+              }}
             >
-              <Pause size={10} className="text-slate-600" />
+              <Pause size={10} style={{ color: playState === 'paused' ? '#10b981' : '#64748b' }} />
             </motion.button>
             <motion.button
+              onClick={stop}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="w-7 h-7 rounded flex items-center justify-center cursor-pointer"

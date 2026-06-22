@@ -3,14 +3,25 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLofiEngine } from '@/stores/useLofiEngine';
-import VolumeSlider from './VolumeSlider';
 import Equalizer from './Equalizer';
+import { Volume2, VolumeX, Settings2 } from 'lucide-react';
 
 export default function AudioControls() {
   const [isOpen, setIsOpen] = useState(false);
-  const isMuffled = useLofiEngine((s) => s.isMuffled);
-  const toggleMuffle = useLofiEngine((s) => s.toggleMuffle);
-  const isPlaying = useLofiEngine((s) => s.isPlaying);
+  const { 
+    playState, volume, setVolume, 
+    isMuted, toggleMute, 
+    isMuffled, toggleMuffle, 
+    filterIntensity, setFilterIntensity 
+  } = useLofiEngine();
+
+  const isPlaying = playState === 'playing' || playState === 'ai_override';
+
+  const statusColor = 
+    playState === 'playing' ? '#10b981' : 
+    playState === 'paused' ? '#f59e0b' : 
+    playState === 'ai_override' ? '#8b5cf6' : 
+    '#64748b';
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -21,40 +32,96 @@ export default function AudioControls() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute bottom-16 right-0 p-4 rounded-xl border backdrop-blur-xl"
+            className="absolute bottom-16 right-0 p-4 rounded-xl border backdrop-blur-xl shadow-2xl"
             style={{
               background: 'rgba(17, 24, 39, 0.95)',
               borderColor: '#2d3a4f',
-              minWidth: '220px',
+              minWidth: '260px',
             }}
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">Volume</span>
+            <div className="space-y-5">
+              
+              {/* Header: Status & Visualizer */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: statusColor, boxShadow: `0 0 8px ${statusColor}` }} />
+                  <span className="text-[10px] font-mono font-bold tracking-wider" style={{ color: statusColor }}>
+                    {playState.replace('_', ' ').toUpperCase()}
+                  </span>
+                </div>
                 {isPlaying && <Equalizer />}
               </div>
-              <VolumeSlider />
-              <div className="border-t border-slate-700/50 pt-3">
-                <button
-                  onClick={toggleMuffle}
-                  className="flex items-center justify-between w-full group cursor-pointer"
-                >
-                  <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                    Low-Pass Filter
+
+              {/* Volume Control */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Volume2 size={12} /> Master Volume
                   </span>
-                  <div
-                    className={`w-8 h-4 rounded-full transition-colors duration-300 flex items-center ${
+                  <span className="text-[10px] font-mono text-slate-500">{isMuted ? '0%' : `${Math.round(volume * 100)}%`}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button onClick={toggleMute} className="shrink-0 transition-colors hover:text-white text-slate-400 cursor-pointer">
+                    {isMuted || volume === 0 ? <VolumeX size={16} className="text-red-400" /> : <Volume2 size={16} />}
+                  </button>
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={isMuted ? 0 : volume}
+                    onChange={(e) => setVolume(parseFloat(e.target.value))}
+                    className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-slate-800"
+                    style={{
+                      background: `linear-gradient(to right, #10b981 ${(isMuted ? 0 : volume) * 100}%, #1e293b ${(isMuted ? 0 : volume) * 100}%)`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Low-Pass Filter Control */}
+              <div className="space-y-3 pt-4 border-t border-slate-800">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Settings2 size={12} /> Low-Pass Filter
+                  </span>
+                  <button
+                    onClick={toggleMuffle}
+                    className={`w-8 h-4 rounded-full transition-colors duration-300 flex items-center cursor-pointer ${
                       isMuffled ? 'bg-violet-500/60 justify-end' : 'bg-slate-700 justify-start'
                     }`}
                   >
-                    <div
-                      className={`w-3 h-3 rounded-full mx-0.5 transition-colors duration-300 ${
-                        isMuffled ? 'bg-violet-300' : 'bg-slate-500'
-                      }`}
-                    />
-                  </div>
-                </button>
+                    <div className={`w-3 h-3 rounded-full mx-0.5 transition-colors duration-300 ${isMuffled ? 'bg-violet-300' : 'bg-slate-500'}`} />
+                  </button>
+                </div>
+
+                <AnimatePresence>
+                  {isMuffled && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex items-center gap-3 pt-1">
+                        <span className="text-[9px] font-mono text-slate-500 w-8">Int.</span>
+                        <input
+                          type="range"
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={filterIntensity}
+                          onChange={(e) => setFilterIntensity(parseInt(e.target.value))}
+                          className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-slate-800"
+                          style={{ background: `linear-gradient(to right, #8b5cf6 ${filterIntensity}%, #1e293b ${filterIntensity}%)` }}
+                        />
+                        <span className="text-[9px] font-mono text-violet-400 w-8 text-right">{filterIntensity}%</span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+
             </div>
           </motion.div>
         )}
@@ -65,16 +132,14 @@ export default function AudioControls() {
         className="w-12 h-12 rounded-full flex items-center justify-center border backdrop-blur-xl cursor-pointer"
         style={{
           background: 'rgba(17, 24, 39, 0.9)',
-          borderColor: isPlaying ? '#f59e0b' : '#2d3a4f',
-          boxShadow: isPlaying ? '0 0 20px rgba(245, 158, 11, 0.15)' : 'none',
+          borderColor: playState === 'playing' ? '#10b981' : playState === 'ai_override' ? '#8b5cf6' : '#2d3a4f',
+          boxShadow: playState === 'playing' ? '0 0 20px rgba(16, 185, 129, 0.15)' : 'none',
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        animate={isPlaying ? { boxShadow: ['0 0 20px rgba(245, 158, 11, 0.1)', '0 0 20px rgba(245, 158, 11, 0.3)', '0 0 20px rgba(245, 158, 11, 0.1)'] } : {}}
-        transition={isPlaying ? { duration: 2, repeat: Infinity } : {}}
       >
         {isPlaying ? (
-          <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-5 h-5 ${playState === 'playing' ? 'text-emerald-400' : 'text-violet-400'}`} fill="currentColor" viewBox="0 0 24 24">
             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
           </svg>
         ) : (
