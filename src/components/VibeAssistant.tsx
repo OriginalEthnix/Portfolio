@@ -26,7 +26,7 @@ export default function VibeAssistant() {
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-50">
+    <div className="fixed bottom-4 left-4 md:bottom-6 md:left-6 z-50">
       <AnimatePresence>
         {isOpen && !isMinimized && (
           <motion.div
@@ -34,7 +34,7 @@ export default function VibeAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="absolute bottom-16 left-0 plugin-window"
+            className="absolute bottom-14 md:bottom-16 left-0 plugin-window"
             style={{ width: 280 }}
           >
             {/* Plugin window header */}

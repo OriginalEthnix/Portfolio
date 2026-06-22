@@ -61,7 +61,7 @@ export default function StartupScreen() {
             className="mb-12 text-center"
           >
             {/* FL Studio style logo */}
-            <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3">
               <div className="flex gap-1">
                 {[...Array(4)].map((_, i) => (
                   <motion.div
@@ -76,7 +76,7 @@ export default function StartupScreen() {
                   />
                 ))}
               </div>
-              <span className="text-4xl font-black tracking-tight" style={{ color: '#f59e0b', fontFamily: 'var(--font-geist-mono)' }}>
+              <span className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight" style={{ color: '#f59e0b', fontFamily: 'var(--font-geist-mono)' }}>
                 VIBE STUDIO
               </span>
               <div className="flex gap-1">
@@ -100,7 +100,7 @@ export default function StartupScreen() {
           </motion.div>
 
           {/* Step list */}
-          <div className="w-full max-w-sm space-y-2 mb-8 px-8">
+          <div className="w-full max-w-sm space-y-2 mb-8 px-4 sm:px-8">
             {STEPS.map((step, i) => (
               <AnimatePresence key={i}>
                 {visibleSteps.includes(i) && (
@@ -118,7 +118,7 @@ export default function StartupScreen() {
           </div>
 
           {/* Progress bar */}
-          <div className="w-full max-w-sm px-8">
+          <div className="w-full max-w-sm px-4 sm:px-8">
             <div
               className="h-1 rounded-full overflow-hidden"
               style={{ background: '#1e293b' }}

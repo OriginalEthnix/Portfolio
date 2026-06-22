@@ -25,7 +25,7 @@ function VoiceButton({ project, isCurrentVoice, onPlay }: {
       }}
     >
       {isCurrentVoice ? <Square size={8} /> : <Play size={8} />}
-      <span>{isCurrentVoice ? 'Stop' : 'Voice Note'}</span>
+      <span className="hidden sm:inline">{isCurrentVoice ? 'Stop' : 'Voice Note'}</span>
       {isCurrentVoice && (
         <div className="flex items-end gap-0.5 h-3 ml-0.5">
           {[...Array(3)].map((_, i) => (
@@ -166,7 +166,7 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
             }}
           >
             {isExpanded ? <ChevronUp size={8} /> : <ChevronDown size={8} />}
-            <span>Know More</span>
+            <span className="hidden sm:inline">Know More</span>
           </motion.button>
         </div>
       </div>
@@ -182,7 +182,7 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
             className="overflow-hidden"
           >
             <div
-              className="mx-10 mb-3 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="mx-2 sm:mx-6 md:mx-10 mb-3 p-3 sm:p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
               style={{
                 background: 'rgba(5,7,13,0.8)',
                 border: `1px solid ${project.color}25`,
@@ -223,7 +223,7 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
                 </div>
 
                 {/* Recruiter Metrics */}
-                <div className="grid grid-cols-4 gap-2 mt-4 pt-3 border-t" style={{ borderColor: `${project.color}20` }}>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-3 border-t" style={{ borderColor: `${project.color}20` }}>
                   <div>
                     <div className="text-[8px] font-mono text-slate-500 uppercase">Role</div>
                     <div className="text-[10px] font-mono text-slate-300 truncate">{project.role || 'Developer'}</div>
@@ -313,13 +313,13 @@ export default function ProjectsSection() {
 
       {/* Column headers */}
       <div
-        className="grid px-3 py-1 text-[9px] font-mono text-slate-600 uppercase tracking-wider border-b"
-        style={{ gridTemplateColumns: '28px 6px 1fr 200px', borderColor: '#1e293b', background: '#080c14' }}
+        className="grid grid-cols-[28px_6px_1fr_auto] md:grid-cols-[28px_6px_1fr_200px] px-3 py-1 text-[9px] font-mono text-slate-600 uppercase tracking-wider border-b"
+        style={{ borderColor: '#1e293b', background: '#080c14' }}
       >
         <span>#</span>
         <span />
         <span className="pl-3">Track Name / Stack</span>
-        <span className="text-right pr-1">Controls</span>
+        <span className="hidden md:block text-right pr-1">Controls</span>
       </div>
 
       {/* Clips */}

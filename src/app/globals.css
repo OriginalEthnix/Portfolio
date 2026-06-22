@@ -140,6 +140,16 @@ input[type="range"]::-moz-range-thumb {
   50% { height: 20px; }
 }
 
+/* ── Responsive & Touch Utilities ─────────────────────── */
+@media (hover: none) {
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* ── Print (boring mode) ─────────────────────────────── */
 @media print {
   body::before { display: none; }

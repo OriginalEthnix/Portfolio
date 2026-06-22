@@ -59,7 +59,7 @@ function ActivityMonitor() {
   }, []);
 
   return (
-    <div className="mt-6 px-3 pb-3 pt-10 bg-slate-900/80 rounded-lg border flex flex-col justify-start h-40 relative overflow-hidden" style={{ borderColor: '#1e293b' }}>
+    <div className="mt-6 px-3 pb-3 pt-10 bg-slate-900/80 rounded-lg border flex flex-col justify-start h-28 sm:h-40 relative overflow-hidden" style={{ borderColor: '#1e293b' }}>
       <div className="absolute top-3 left-3 text-[8px] font-mono text-slate-500 uppercase tracking-widest">Session Log</div>
       <div className="flex flex-col gap-2 z-10 font-mono text-[10px] leading-relaxed">
         {logs.map((log, i) => (
@@ -107,14 +107,14 @@ export default function HeroSection() {
       />
 
       {/* Glow orbs */}
-      <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full pointer-events-none"
+      <div className="absolute top-0 left-1/4 w-48 h-48 sm:w-64 sm:h-64 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)' }} />
-      <div className="absolute bottom-0 right-1/4 w-48 h-48 rounded-full pointer-events-none"
+      <div className="absolute bottom-0 right-1/4 w-32 h-32 sm:w-48 sm:h-48 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%)' }} />
 
-      <div className="relative z-10 p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start">
+      <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-start">
         {/* Left: DAW project info */}
-        <div className="shrink-0 w-full md:w-72">
+        <div className="shrink-0 w-full md:w-60 lg:w-72">
           {/* File header */}
           <div className="flex items-center gap-2 mb-4 overflow-hidden">
             <div className="flex gap-1 shrink-0">
@@ -162,7 +162,7 @@ export default function HeroSection() {
                 Now Opening Session
               </div>
               <h1
-                className="text-5xl md:text-7xl font-black tracking-tight leading-none mb-3"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tight leading-none mb-3"
                 style={{
                   background: 'linear-gradient(135deg, #f59e0b, #f97316, #fbbf24)',
                   WebkitBackgroundClip: 'text',

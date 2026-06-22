@@ -35,8 +35,8 @@ export default function ContactBar() {
     >
       {/* Section navigation strip */}
       <div className="flex items-center overflow-x-auto" style={{ borderBottom: '1px solid #0f172a' }}>
-        <div className="px-3 py-1.5 border-r shrink-0" style={{ borderColor: '#1e293b' }}>
-          <span className="text-[9px] font-mono text-slate-600 uppercase tracking-widest">Navigate</span>
+        <div className="px-3 py-2.5 md:py-1.5 border-r shrink-0" style={{ borderColor: '#1e293b' }}>
+          <span className="text-[10px] md:text-[9px] font-mono text-slate-600 uppercase tracking-widest">Navigate</span>
         </div>
         {NAV_SECTIONS.map((sec) => (
           <motion.button
@@ -44,7 +44,7 @@ export default function ContactBar() {
             onClick={() => setActiveSection(sec.id)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider border-r shrink-0 cursor-pointer transition-all"
+            className="px-3 md:px-4 py-2.5 md:py-1.5 text-[11px] md:text-[10px] font-mono uppercase tracking-wider border-r shrink-0 cursor-pointer transition-all"
             style={{
               borderColor: '#1e293b',
               color: activeSection === sec.id ? sec.color : '#475569',
@@ -59,7 +59,7 @@ export default function ContactBar() {
       </div>
 
       {/* Contact strip */}
-      <div className="flex items-center gap-2 px-3 py-2 overflow-x-auto">
+      <div className="hidden md:flex items-center gap-2 px-3 py-2 overflow-x-auto">
         {CONTACT_ITEMS.map((item) => (
           <a
             key={item.label}

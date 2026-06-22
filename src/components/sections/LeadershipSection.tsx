@@ -17,7 +17,7 @@ function MixerChannel({ role, index }: { role: typeof leadership[number]; index:
       transition={{ delay: index * 0.1 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex flex-col items-center gap-2 p-3 rounded-lg border min-w-[100px] flex-1 relative"
+      className="flex flex-col items-center gap-2 p-3 rounded-lg border min-w-[90px] sm:min-w-[100px] flex-1 relative"
       style={{
         background: `linear-gradient(180deg, ${role.color}10, rgba(5,7,13,0.8))`,
         borderColor: hovered ? `${role.color}60` : '#1e293b',
@@ -150,7 +150,7 @@ export default function LeadershipSection() {
 
           {/* Master channel */}
           <div
-            className="flex flex-col items-center gap-2 p-3 rounded-lg border min-w-[100px]"
+            className="flex flex-col items-center gap-2 p-3 rounded-lg border min-w-[90px] sm:min-w-[100px]"
             style={{ background: 'rgba(5,7,13,0.9)', borderColor: '#2d3a4f' }}
           >
             <div className="text-[8px] font-mono uppercase tracking-widest text-center px-1 py-0.5 rounded w-full bg-slate-800 text-slate-400">

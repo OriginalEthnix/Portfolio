@@ -36,11 +36,12 @@ export default function SessionPlayback() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-4 py-2 rounded-xl border backdrop-blur-xl"
+          className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-xl border backdrop-blur-xl"
           style={{
             background: 'rgba(17, 24, 39, 0.95)',
             borderColor: '#f59e0b60',
             boxShadow: '0 0 30px rgba(245, 158, 11, 0.15)',
+            maxWidth: '90vw',
           }}
         >
           {/* Playback progress dots */}
@@ -56,7 +57,7 @@ export default function SessionPlayback() {
                   animate={i === playbackIndex ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 1, repeat: Infinity }}
                 />
-                <span className="text-[7px] font-mono" style={{ color: i === playbackIndex ? '#f59e0b' : '#475569' }}>
+                <span className="hidden sm:block text-[7px] font-mono" style={{ color: i === playbackIndex ? '#f59e0b' : '#475569' }}>
                   {section.label}
                 </span>
               </div>
@@ -64,7 +65,7 @@ export default function SessionPlayback() {
           </div>
 
           {/* Progress bar */}
-          <div className="w-20 h-1 bg-slate-800 rounded-full overflow-hidden">
+          <div className="hidden sm:block w-20 h-1 bg-slate-800 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-amber-400 rounded-full"
               key={playbackIndex}
@@ -75,7 +76,7 @@ export default function SessionPlayback() {
           </div>
 
           {/* Now playing label */}
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             <div className="flex items-end gap-0.5 h-3">
               {[...Array(3)].map((_, i) => (
                 <motion.div

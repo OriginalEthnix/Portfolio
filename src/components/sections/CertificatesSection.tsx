@@ -58,7 +58,7 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
                 {cert.name}
                 <span className="px-1.5 py-[1px] rounded text-[7px] font-black uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
                   <div className="w-1 h-1 rounded-full bg-emerald-400" />
-                  VERIFIED
+                  <span className="hidden sm:inline">VERIFIED</span>
                 </span>
               </div>
               <div className="text-[10px] font-mono" style={{ color: `${cert.color}aa` }}>
@@ -109,7 +109,7 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
             }}
           >
             {isExpanded ? <ChevronUp size={8} /> : <ChevronDown size={8} />}
-            <span>Know More</span>
+            <span className="hidden sm:inline">Know More</span>
           </motion.button>
         </div>
       </div>
@@ -125,7 +125,7 @@ function CertRow({ cert, index }: { cert: Certificate; index: number }) {
             className="overflow-hidden"
           >
             <div
-              className="mx-10 mb-3 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="mx-2 sm:mx-6 md:mx-10 mb-3 p-3 sm:p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
               style={{ background: 'rgba(5,7,13,0.8)', border: `1px solid ${cert.color}20` }}
             >
               {/* Left */}

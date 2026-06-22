@@ -59,10 +59,10 @@ function ChannelRow({ skill, index }: { skill: any; index: number }) {
         transition={{ delay: index * 0.05 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="channel-row flex flex-col px-3 py-2 cursor-pointer border-b border-transparent hover:border-slate-800"
+        className="channel-row flex flex-col px-2 sm:px-3 py-2 cursor-pointer border-b border-transparent hover:border-slate-800"
         onClick={() => setExpanded(!expanded)}
       >
-        <div className="flex items-center gap-3 w-full">
+        <div className="flex items-center gap-2 sm:gap-3 w-full">
           {/* Channel number */}
           <span className="text-[9px] font-mono text-slate-700 w-4 shrink-0">{index + 1}</span>
 
@@ -74,7 +74,7 @@ function ChannelRow({ skill, index }: { skill: any; index: number }) {
           />
 
           {/* Name */}
-          <span className="text-xs font-mono text-slate-300 w-28 shrink-0 truncate flex items-center gap-1">
+          <span className="text-xs font-mono text-slate-300 w-20 sm:w-28 shrink-0 truncate flex items-center gap-1">
             {skill.name}
             {expanded ? <ChevronUp size={10} className="text-slate-600" /> : <ChevronDown size={10} className="text-slate-600" />}
           </span>
@@ -92,8 +92,8 @@ function ChannelRow({ skill, index }: { skill: any; index: number }) {
           </div>
 
           {/* Credibility Badge */}
-          <div className="w-24 shrink-0 flex justify-end">
-            <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded ${badgeClass}`}>
+          <div className="w-16 sm:w-24 shrink-0 flex justify-end">
+            <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded ${badgeClass} text-center truncate w-full sm:w-auto`}>
               {skill.experienceLevel}
             </span>
           </div>
@@ -184,14 +184,14 @@ export default function SkillsSection() {
       </div>
 
       {/* Channel rack header */}
-      <div className="flex items-center px-3 py-1 text-[9px] font-mono text-slate-700 uppercase tracking-wider border-b"
+      <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1 text-[9px] font-mono text-slate-700 uppercase tracking-wider border-b"
         style={{ borderColor: '#0f172a', background: '#080c14' }}>
-        <span className="w-4 mr-3">#</span>
-        <span className="w-4 mr-3" />
-        <span className="w-28 mr-3">Instrument</span>
+        <span className="w-4 shrink-0">#</span>
+        <span className="w-2 shrink-0" />
+        <span className="w-20 sm:w-28 shrink-0">Instrument</span>
         <span className="flex-1">Proficiency</span>
-        <span className="hidden sm:block w-20 text-right mr-3">Metrics</span>
-        <span className="w-24 text-right">Level</span>
+        <span className="hidden sm:block w-20 text-right shrink-0">Metrics</span>
+        <span className="w-16 sm:w-24 text-right shrink-0">Level</span>
       </div>
 
       {/* Channels */}

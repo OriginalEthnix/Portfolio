@@ -132,7 +132,7 @@ function ExperienceTrack({ exp, index }: { exp: Experience; index: number }) {
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <div className="ml-12 mr-3 mb-3 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
+            <div className="ml-4 sm:ml-12 mr-3 mb-3 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
               style={{ background: 'rgba(5,7,13,0.8)', border: `1px solid ${exp.color}20` }}>
               <div className="space-y-3">
                 <div>
@@ -195,7 +195,9 @@ export default function ExperienceSection() {
       <div className="px-3 py-2 flex items-center gap-3 border-b shrink-0"
         style={{ background: '#0a0f1a', borderColor: '#1e293b' }}>
         <div className="w-2 h-2 rounded-full led-pulse" style={{ background: '#a78bfa' }} />
-        <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest">RECORDING TIMELINE — Experience</span>
+        <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest">
+          <span className="hidden sm:inline">RECORDING TIMELINE — </span>Experience
+        </span>
         <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, #a78bfa30, transparent)' }} />
         <span className="text-[9px] font-mono text-slate-600">{experiences.length} tracks</span>
       </div>

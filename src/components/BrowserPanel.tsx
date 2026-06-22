@@ -87,7 +87,7 @@ export default function BrowserPanel() {
   const { isBrowserOpen, toggleBrowser, activeSection, setActiveSection } = useStudioStore();
 
   return (
-    <>
+    <div className="hidden md:flex h-full">
       {/* Toggle button (always visible) */}
       <motion.button
         onClick={toggleBrowser}
@@ -154,6 +154,6 @@ export default function BrowserPanel() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }

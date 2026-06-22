@@ -57,14 +57,14 @@ export default function Home() {
   }, [addTypedKey]);
 
   return (
-    <div className="flex flex-col flex-1 min-h-screen" style={{ background: "#05070D" }}>
+    <div className="flex flex-col flex-1 min-h-dvh" style={{ background: "#05070D" }}>
       <AnimatePresence mode="wait">
         {!isStartupComplete ? (
           <StartupScreen key="startup" />
         ) : isRecruiterMode ? (
           <RecruiterView key="recruiter" />
         ) : (
-          <div key="vibes" className="flex flex-col h-screen overflow-hidden">
+          <div key="vibes" className="flex flex-col h-dvh overflow-hidden pb-safe">
             <TopBar />
             <ContactBar />
             
@@ -84,32 +84,22 @@ export default function Home() {
 
             {/* Status bar */}
             <footer
-              className="border-t px-4 py-1 flex items-center justify-between shrink-0 z-40"
+              className="border-t px-2 md:px-4 py-1 flex items-center justify-between shrink-0 z-40"
               style={{ background: "#080b12", borderColor: "#1e293b" }}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3">
                 <div className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400 led-pulse" />
-                  <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">
-                    READY
-                  </span>
+                  <span className="text-[8px] md:text-[9px] font-mono text-slate-500 uppercase tracking-widest">READY</span>
                 </div>
-                <span className="text-[9px] font-mono text-slate-700">|</span>
-                <span className="text-[9px] font-mono text-slate-600">
-                  CPU: 4%
-                </span>
-                <span className="text-[9px] font-mono text-slate-700">|</span>
-                <span className="text-[9px] font-mono text-slate-600">
-                  RAM: 82MB
-                </span>
+                <span className="hidden sm:inline text-[8px] md:text-[9px] font-mono text-slate-700">|</span>
+                <span className="hidden sm:inline text-[8px] md:text-[9px] font-mono text-slate-600">CPU: 4%</span>
+                <span className="hidden md:inline text-[8px] md:text-[9px] font-mono text-slate-700">|</span>
+                <span className="hidden md:inline text-[8px] md:text-[9px] font-mono text-slate-600">RAM: 82MB</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[9px] font-mono text-slate-600">
-                  Dhruv Wadhwa &copy; {new Date().getFullYear()}
-                </span>
-                <span className="text-[9px] font-mono text-amber-500/60 uppercase tracking-widest">
-                  THE VIBE STUDIO
-                </span>
+              <div className="flex items-center gap-2 md:gap-3">
+                <span className="text-[8px] md:text-[9px] font-mono text-slate-600">Dhruv Wadhwa &copy; {new Date().getFullYear()}</span>
+                <span className="hidden sm:inline text-[8px] md:text-[9px] font-mono text-amber-500/60 uppercase tracking-widest">THE VIBE STUDIO</span>
               </div>
             </footer>
           </div>
