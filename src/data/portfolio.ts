@@ -9,8 +9,8 @@ export const socialLinks = {
   instagram: "https://www.instagram.com/dhruv.stfu/",
   twitter: "https://twitter.com/dhruvwadhwa",
   discord: "https://discord.com/users/dhruvwadhwa",
-  spotify: "https://open.spotify.com/user/WADHWAVE",
-  youtube: "https://youtube.com/@ETHNIX",
+  spotify: "https://open.spotify.com/artist/284fVZiigW9PYX9aw9Xc6D?si=j6KV637WQ5u2dPUY6-DEEw",
+  youtube: "https://www.youtube.com/@ethnix5123",
   wadhwave: "https://www.instagram.com/wadhwave/",
 };
 
