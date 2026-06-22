@@ -108,9 +108,9 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
           }}
           onClick={() => toggleExpandProject(project.id)}
         >
-          {/* Waveform lines inside clip (decorative) */}
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-end gap-0.5 h-6 opacity-30">
-            {Array.from({ length: 16 }).map((_, i) => (
+          {/* Waveform lines inside clip (decorative) - strictly z-0 */}
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-end gap-0.5 h-6 opacity-20 z-0 pointer-events-none hidden sm:flex">
+            {Array.from({ length: 12 }).map((_, i) => (
               <motion.div
                 key={i}
                 className="w-0.5 rounded-full"
@@ -122,24 +122,24 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
             ))}
           </div>
 
-          <span className="text-base">{project.icon}</span>
-          <div className="flex-1 min-w-0 flex items-center justify-between">
-            <div>
-              <div className="font-semibold text-sm text-slate-200 truncate flex items-center gap-2">
-                {project.title}
+          <span className="text-base relative z-10 shrink-0">{project.icon}</span>
+          <div className="flex-1 min-w-0 flex items-center justify-between relative z-10 pr-0 sm:pr-14">
+            <div className="min-w-0 w-full">
+              <div className="font-semibold text-sm text-slate-200 truncate flex items-center gap-1.5 sm:gap-2">
+                <span className="truncate">{project.title}</span>
                 {index === 0 && (
-                  <span className="px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/50">
+                  <span className="px-1.5 py-[1px] rounded text-[6px] sm:text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/50 shrink-0 hidden sm:inline-block">
                     HEADLINER
                   </span>
                 )}
                 {/* Status LED */}
-                <div className="flex items-center gap-1 ml-1">
-                  <div className={`w-1.5 h-1.5 rounded-full ${
+                <div className="flex items-center gap-1 ml-0.5 sm:ml-1 shrink-0">
+                  <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                     index === 0 ? 'led-live' : 
                     index === 1 ? 'led-dev' : 
                     index === 2 ? 'led-completed' : 'led-source'
                   }`} />
-                  <span className="text-[8px] font-mono text-slate-500 uppercase">
+                  <span className="text-[7px] sm:text-[8px] font-mono text-slate-500 uppercase hidden sm:inline">
                     {index === 0 ? 'LIVE' : index === 1 ? 'DEV' : index === 2 ? 'COMPLETED' : 'OPEN SOURCE'}
                   </span>
                 </div>
@@ -182,109 +182,133 @@ function ProjectClip({ project, index }: { project: Project; index: number }) {
             className="overflow-hidden"
           >
             <div
-              className="mx-2 sm:mx-6 md:mx-10 mb-3 p-3 sm:p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="mx-2 sm:mx-6 md:mx-10 mb-4 p-4 sm:p-5 rounded-lg flex flex-col gap-5 relative overflow-hidden group"
               style={{
-                background: 'rgba(5,7,13,0.8)',
-                border: `1px solid ${project.color}25`,
+                background: 'rgba(5,7,13,0.95)',
+                border: `1px solid ${project.color}30`,
               }}
             >
-              {/* Left: Details */}
-              <div className="space-y-3">
-                <div>
-                  <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: project.color }}>Description</div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{project.desc}</p>
-                </div>
-                <div>
-                  <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: project.color }}>Key Features</div>
-                  <ul className="space-y-1">
-                    {project.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-xs text-slate-500">
-                        <span style={{ color: project.color }}>▸</span> {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: project.color }}>Challenge</div>
-                  <p className="text-xs text-slate-500 italic">{project.challenges}</p>
-                </div>
-                <div>
-                  <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: project.color }}>Outcome</div>
-                  <p className="text-xs text-slate-400">{project.outcome}</p>
-                </div>
+              {/* Background Glow - strictly z-0 to avoid overlapping content */}
+              <div 
+                className="absolute inset-0 z-0 opacity-[0.03] transition-opacity duration-500 group-hover:opacity-[0.08] pointer-events-none" 
+                style={{ background: `radial-gradient(circle at top right, ${project.color}, transparent 70%)` }} 
+              />
+
+              <div className="relative z-10 flex flex-col lg:flex-row gap-5 lg:gap-8">
                 
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {project.stack.map((t) => (
-                    <span key={t} className="text-[9px] font-mono px-2 py-0.5 rounded-full border"
-                      style={{ color: project.color, borderColor: `${project.color}40`, background: `${project.color}10` }}>
-                      {t}
-                    </span>
-                  ))}
+                {/* Image/Preview Area - Top on Mobile, Left on Desktop */}
+                <div className="w-full lg:w-2/5 shrink-0 flex flex-col gap-4">
+                  <div 
+                    className="rounded-lg overflow-hidden border relative flex items-center justify-center bg-black/50 aspect-video lg:aspect-auto lg:h-full min-h-[200px]"
+                    style={{ borderColor: `${project.color}20` }}
+                  >
+                    {project.image ? (
+                      <img src={project.image} alt={project.title} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-300" />
+                    ) : (
+                      <div className="flex flex-col items-center gap-2 opacity-50">
+                        <span className="text-5xl">{project.icon}</span>
+                        <span className="text-xs font-mono" style={{ color: project.color }}>NO PREVIEW</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Recruiter Metrics */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-3 border-t" style={{ borderColor: `${project.color}20` }}>
-                  <div>
-                    <div className="text-[8px] font-mono text-slate-500 uppercase">Role</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.role || 'Developer'}</div>
-                  </div>
-                  <div>
-                    <div className="text-[8px] font-mono text-slate-500 uppercase">Users</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">{project.users || 'N/A'}</div>
-                  </div>
-                  <div>
-                    <div className="text-[8px] font-mono text-slate-500 uppercase">Timeline</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">3 Months</div>
-                  </div>
-                  <div>
-                    <div className="text-[8px] font-mono text-slate-500 uppercase">Complexity</div>
-                    <div className="text-[10px] font-mono text-slate-300 truncate">High</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Project "screenshot" area */}
-              <div
-                className="rounded-lg flex flex-col items-center justify-center gap-2 min-h-32 p-3 relative overflow-hidden group"
-                style={{
-                  background: `linear-gradient(135deg, ${project.color}10, ${project.color}05)`,
-                  border: `1px solid ${project.color}20`,
-                }}
-              >
-                {/* Image preview */}
-                {project.image && (
-                  <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity duration-300">
-                    <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#05070D] via-transparent to-[#05070D]" />
-                  </div>
-                )}
-                
-                <div className="relative z-10 flex flex-col items-center gap-2">
-                  <span className="text-4xl">{project.icon}</span>
-                  <span className="text-xs font-mono text-center" style={{ color: `${project.color}80` }}>{project.subtitle}</span>
+                {/* Content Area */}
+                <div className="flex-1 flex flex-col min-w-0">
                   
-                  <div className="flex gap-2 mt-2">
+                  {/* Title & Badges */}
+                  <div className="mb-4 border-b pb-3" style={{ borderColor: `${project.color}20` }}>
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2 flex items-center gap-2">
+                      {project.icon} {project.title}
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.stack.map((t) => (
+                        <span key={t} className="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded border whitespace-nowrap"
+                          style={{ color: project.color, borderColor: `${project.color}40`, background: `${project.color}10` }}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Project Description & Details */}
+                  <div className="space-y-4 mb-6 flex-1">
+                    <div>
+                      <div className="text-[10px] font-mono uppercase tracking-widest mb-1.5" style={{ color: project.color }}>Description</div>
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed break-words">{project.desc}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-[10px] font-mono uppercase tracking-widest mb-1.5" style={{ color: project.color }}>Key Features</div>
+                        <ul className="space-y-1">
+                          {project.features.map((f) => (
+                            <li key={f} className="flex items-start gap-2 text-xs text-slate-400 break-words">
+                              <span style={{ color: project.color, marginTop: '2px' }}>▸</span> 
+                              <span className="flex-1">{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="text-[10px] font-mono uppercase tracking-widest mb-1.5" style={{ color: project.color }}>Challenge</div>
+                          <p className="text-xs text-slate-400 italic break-words">{project.challenges}</p>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-mono uppercase tracking-widest mb-1.5" style={{ color: project.color }}>Outcome</div>
+                          <p className="text-xs text-slate-300 font-medium break-words">{project.outcome}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Metrics */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                      <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
+                        <div className="text-[9px] font-mono text-slate-500 uppercase mb-0.5">Role</div>
+                        <div className="text-[10px] font-mono text-slate-300 truncate">{project.role || 'Developer'}</div>
+                      </div>
+                      <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
+                        <div className="text-[9px] font-mono text-slate-500 uppercase mb-0.5">Users</div>
+                        <div className="text-[10px] font-mono text-slate-300 truncate">{project.users || 'N/A'}</div>
+                      </div>
+                      <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
+                        <div className="text-[9px] font-mono text-slate-500 uppercase mb-0.5">Timeline</div>
+                        <div className="text-[10px] font-mono text-slate-300 truncate">3 Months</div>
+                      </div>
+                      <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
+                        <div className="text-[9px] font-mono text-slate-500 uppercase mb-0.5">Complexity</div>
+                        <div className="text-[10px] font-mono text-slate-300 truncate">High</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons - Always at the bottom */}
+                  <div className="flex flex-wrap gap-3 mt-auto pt-4 border-t" style={{ borderColor: `${project.color}20` }}>
                     <motion.a
                       href={project.demoLink || project.link}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded text-[10px] font-mono border cursor-pointer"
-                      style={{ color: project.color, borderColor: `${project.color}50`, background: `${project.color}20` }}
-                      whileHover={{ scale: 1.05, boxShadow: `0 0 12px ${project.glow}` }}
+                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded text-xs font-mono font-bold border cursor-pointer transition-colors"
+                      style={{ color: '#05070D', borderColor: project.color, background: project.color }}
+                      whileHover={{ scale: 1.02, boxShadow: `0 0 15px ${project.glow}` }}
+                      whileTap={{ scale: 0.98 }}
                       target="_blank" rel="noopener noreferrer"
                     >
-                      <ExternalLink size={10} />
+                      <ExternalLink size={14} />
                       Live Demo
                     </motion.a>
                     <motion.a
                       href={project.githubLink || '#'}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded text-[10px] font-mono border cursor-pointer"
+                      className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded text-xs font-mono border cursor-pointer transition-colors"
                       style={{ color: '#e2e8f0', borderColor: '#475569', background: '#1e293b80' }}
-                      whileHover={{ scale: 1.05, borderColor: '#94a3b8' }}
+                      whileHover={{ scale: 1.02, borderColor: '#94a3b8', background: '#1e293b' }}
+                      whileTap={{ scale: 0.98 }}
                       target="_blank" rel="noopener noreferrer"
                     >
-                      <span className="w-3 h-3 flex items-center justify-center">{"</>"}</span>
-                      Source
+                      <span className="w-4 h-4 flex items-center justify-center font-bold">{"</>"}</span>
+                      Source Code
                     </motion.a>
                   </div>
+
                 </div>
               </div>
             </div>
