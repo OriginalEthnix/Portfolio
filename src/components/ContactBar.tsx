@@ -59,7 +59,7 @@ export default function ContactBar() {
       </div>
 
       {/* Contact strip */}
-      <div className="hidden md:flex items-center gap-2 px-3 py-2 overflow-x-auto">
+      <div className="flex flex-wrap items-center gap-2 px-3 py-2">
         {CONTACT_ITEMS.map((item) => (
           <a
             key={item.label}

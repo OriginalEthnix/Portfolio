@@ -59,7 +59,7 @@ export default function WorkspaceLayout() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: -10 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="w-full h-full"
+              className="w-full h-full overflow-y-auto overflow-x-hidden"
             >
               <CurrentSection />
             </motion.div>

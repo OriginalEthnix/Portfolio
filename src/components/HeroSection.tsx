@@ -112,9 +112,9 @@ export default function HeroSection() {
       <div className="absolute bottom-0 right-1/4 w-32 h-32 sm:w-48 sm:h-48 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%)' }} />
 
-      <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-start">
+      <div className="relative z-10 p-4 sm:p-6 md:p-8 flex flex-col lg:flex-row gap-6 md:gap-8 items-center lg:items-start h-full">
         {/* Left: DAW project info */}
-        <div className="shrink-0 w-full md:w-60 lg:w-72">
+        <div className="shrink-0 w-full lg:w-72 max-w-md mx-auto lg:mx-0">
           {/* File header */}
           <div className="flex items-center gap-2 mb-4 overflow-hidden">
             <div className="flex gap-1 shrink-0">
@@ -150,19 +150,19 @@ export default function HeroSection() {
         </div>
 
         {/* Center: Main title & Artwork */}
-        <div className="flex-1 flex flex-col justify-center relative">
+        <div className="flex-1 flex flex-col justify-center relative w-full items-center lg:items-start text-center lg:text-left mt-6 lg:mt-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex flex-col md:flex-row items-start md:items-center gap-8"
+            className="flex flex-col-reverse lg:flex-row items-center lg:items-center gap-6 lg:gap-8 w-full"
           >
-            <div className="flex-1">
-              <div className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em] mb-2">
+            <div className="flex-1 flex flex-col items-center lg:items-start w-full">
+              <div className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em] mb-2 text-center lg:text-left">
                 Now Opening Session
               </div>
               <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tight leading-none mb-3"
+                className="text-[clamp(2.5rem,8vw,4.5rem)] font-black tracking-tight leading-none mb-3 text-center lg:text-left"
                 style={{
                   background: 'linear-gradient(135deg, #f59e0b, #f97316, #fbbf24)',
                   WebkitBackgroundClip: 'text',
@@ -178,7 +178,7 @@ export default function HeroSection() {
               <p className="text-sm text-slate-400 leading-relaxed max-w-lg mb-6">{profile.bio}</p>
 
               {/* Role tags */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-2">
                 {profile.roles.map((role, i) => {
                   const colors = ['#f97316', '#06b6d4', '#a78bfa', '#34d399'];
                   return (
@@ -200,7 +200,7 @@ export default function HeroSection() {
 
             {/* Vinyl Record Artwork */}
             <motion.div 
-              className="hidden lg:flex w-32 h-32 shrink-0 rounded-full border-4 border-slate-900 shadow-2xl relative overflow-hidden items-center justify-center"
+              className="flex w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 shrink-0 rounded-full border-4 border-slate-900 shadow-2xl relative overflow-hidden items-center justify-center mx-auto lg:mx-0 mb-2 lg:mb-0"
               style={{ background: 'linear-gradient(135deg, #111, #222)' }}
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
@@ -224,9 +224,10 @@ export default function HeroSection() {
         </div>
 
         {/* Right: Quick nav & Stats */}
-        <div className="hidden xl:flex flex-col gap-6 shrink-0 w-48">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-col sm:flex-row lg:flex-col gap-6 shrink-0 w-full lg:w-48 mt-6 lg:mt-0 max-w-full lg:mx-0">
+          <div className="flex flex-col gap-1 flex-1">
             <span className="text-[9px] font-mono text-slate-600 uppercase tracking-widest mb-1 border-b border-slate-800 pb-1">Quick Load</span>
+            <div className="grid grid-cols-2 lg:flex lg:flex-col gap-1 mt-1 lg:mt-0">
             {[
               { label: 'Projects', id: 'projects' as const, color: '#f97316' },
               { label: 'Certs', id: 'certificates' as const, color: '#06b6d4' },
@@ -248,9 +249,10 @@ export default function HeroSection() {
                 {label}
               </motion.button>
             ))}
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2 p-3 rounded-lg border bg-slate-900/50" style={{ borderColor: '#1e293b' }}>
+          <div className="flex flex-col gap-2 p-3 rounded-lg border bg-slate-900/50 flex-1" style={{ borderColor: '#1e293b' }}>
             <span className="text-[9px] font-mono text-amber-500 uppercase tracking-widest mb-1 border-b border-amber-500/20 pb-1">Session Stats</span>
             <div className="grid grid-cols-2 gap-3 text-xs font-mono mt-1">
               <div className="flex flex-col"><span className="text-slate-500 text-[9px] uppercase">Projects</span><span className="text-slate-300 font-bold"><AnimatedCounter value={sessionStats.projects} /></span></div>
@@ -261,7 +263,7 @@ export default function HeroSection() {
           </div>
           
           {/* Animated Audio Visualizer Replacement */}
-          <div className="mt-auto flex flex-col gap-2">
+          <div className="mt-auto flex flex-col gap-2 flex-1 sm:hidden lg:flex">
             <span className="text-[9px] font-mono text-slate-600 uppercase tracking-widest border-b border-slate-800 pb-1">Master Output</span>
             <div className="flex items-end gap-[2px] h-12 w-full mt-1">
               {Array.from({ length: 24 }).map((_, i) => (
